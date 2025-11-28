@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Gemini Office v11 - Singularity</title>
+    <title>Super Gemini Office v12 - Hyper-Suite</title>
     
     <!-- Core Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
@@ -12,6 +12,19 @@
     <script src="https://unpkg.com/docx@7.1.0/build/index.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Syntax Highlighting (Prism) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+    <!-- Math Rendering (KaTeX) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -34,13 +47,17 @@
         .prose h2 { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; margin: 1.5rem 0 0.8rem; }
         .prose h3 { font-size: 1.25rem; font-weight: 600; color: #60a5fa; margin: 1.25rem 0 0.6rem; }
         .prose p { margin-bottom: 1rem; line-height: 1.7; color: #cbd5e1; }
-        .prose ul { list-style: none; padding-left: 0; margin-bottom: 1rem; }
+        .prose ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 1rem; marker: #3b82f6; }
         .prose li { position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #94a3b8; }
         .prose li::before { content: "•"; position: absolute; left: 0; color: #3b82f6; font-weight: bold; }
         .prose strong { color: #fff; font-weight: 600; }
         .prose blockquote { border-left: 4px solid #3b82f6; padding: 0.5rem 0 0.5rem 1rem; margin: 1.5rem 0; background: linear-gradient(90deg, rgba(59,130,246,0.1), transparent); border-radius: 0 8px 8px 0; font-style: italic; color: #e2e8f0; }
-        .prose code { background: rgba(30, 41, 59, 0.5); padding: 0.2rem 0.4rem; border-radius: 4px; border: 1px solid var(--glass-border); color: #93c5fd; font-size: 0.9em; }
-        .prose pre { background: #0f172a; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; border: 1px solid var(--glass-border); }
+        
+        /* Prism Fixes */
+        pre[class*="language-"] { background: #0f172a !important; border: 1px solid var(--glass-border); border-radius: 8px; margin: 1.5rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        code[class*="language-"], pre[class*="language-"] { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; text-shadow: none; }
+        .prose :not(pre) > code { background: rgba(30, 41, 59, 0.5); padding: 0.2rem 0.4rem; border-radius: 4px; border: 1px solid var(--glass-border); color: #93c5fd; font-size: 0.9em; }
+
         .prose table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; }
         .prose th { background: rgba(30, 41, 59, 0.8); padding: 0.75rem; text-align: left; color: #fff; border-bottom: 1px solid var(--glass-border); }
         .prose td { padding: 0.75rem; border-bottom: 1px solid var(--glass-border); color: #cbd5e1; }
@@ -80,15 +97,30 @@
         /* Toast */
         .toast { position: fixed; top: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; background: #1e293b; border: 1px solid var(--glass-border); z-index: 100; transform: translateX(150%); transition: all 0.3s; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
         .toast.show { transform: translateX(0); }
+
+        /* Drag Overlay */
+        #dragOverlay { pointer-events: none; opacity: 0; transition: opacity 0.2s; background: rgba(59, 130, 246, 0.1); border: 2px dashed #3b82f6; z-index: 40; }
+        .drag-active #dragOverlay { opacity: 1; }
     </style>
 </head>
-<body class="flex flex-col h-screen bg-[#020617] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.1),transparent_50%)]">
+<body class="flex flex-col h-screen bg-[#020617] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.1),transparent_50%)]" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+
+    <!-- Drag Overlay -->
+    <div id="dragOverlay" class="fixed inset-4 rounded-3xl flex items-center justify-center">
+        <div class="bg-slate-900/90 backdrop-blur-xl p-6 rounded-2xl border border-blue-500/50 shadow-2xl flex flex-col items-center gap-4">
+            <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center animate-bounce">
+                <i data-lucide="upload-cloud" class="w-8 h-8 text-blue-400"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white">Drop to Analyze</h3>
+            <p class="text-blue-200">PDF, Excel, Images supported</p>
+        </div>
+    </div>
 
     <!-- Header -->
     <header class="h-14 glass-panel border-b-0 border-b-white/5 flex items-center justify-between px-6 sticky top-0 z-30">
         <div class="flex items-center gap-3">
             <div class="bg-gradient-to-br from-indigo-500 to-blue-600 p-2 rounded-lg shadow-lg shadow-blue-500/20"><i data-lucide="bot" class="w-5 h-5 text-white"></i></div>
-            <h1 class="font-heading font-bold text-lg text-white tracking-tight">Super Gemini <span class="text-slate-500 text-xs font-normal ml-1">v11 Singularity</span></h1>
+            <h1 class="font-heading font-bold text-lg text-white tracking-tight">Super Gemini <span class="text-slate-500 text-xs font-normal ml-1">v12 Hyper</span></h1>
         </div>
         <div class="flex items-center gap-3">
             <button onclick="clearChat()" class="p-2 hover:bg-white/5 rounded-lg text-slate-400 hover:text-red-400 transition-colors" title="Clear Chat"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
@@ -154,7 +186,7 @@
                 </div>
                 <h2 class="text-3xl font-bold text-white mb-3 tracking-tight font-heading">Super Gemini Office</h2>
                 <p class="text-slate-400 max-w-md mb-8 text-sm leading-relaxed">
-                    <strong>v11 Omni-Tool Edition</strong>.<br>Unlimited streaming, visual reasoning, and embedded AI art.
+                    <strong>v12 Hyper-Suite</strong>.<br>Math, Code, Canvas, and Infinite Streaming.
                 </p>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl">
                     <button onclick="setMode('presentation')" class="group p-4 bg-slate-900/50 hover:bg-blue-600/10 border border-white/5 hover:border-blue-500/50 rounded-xl text-left transition-all relative overflow-hidden"><i data-lucide="presentation" class="w-5 h-5 text-blue-400 mb-3 group-hover:scale-110 transition-transform"></i><h3 class="text-xs font-bold text-white uppercase tracking-wider mb-1">Presentation</h3><p class="text-[10px] text-slate-500 group-hover:text-blue-200">Canvas + Images</p></button>
@@ -172,6 +204,11 @@
         <div class="max-w-4xl mx-auto w-full space-y-3">
             <div class="flex items-center justify-between px-1">
                 <div class="flex items-center gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer group select-none bg-slate-900/50 border border-white/5 px-2 py-1 rounded-md transition-colors hover:border-blue-500/30">
+                        <input type="checkbox" id="humanizerToggle" class="peer sr-only">
+                        <div class="w-2 h-2 rounded-full bg-slate-600 peer-checked:bg-blue-500 transition-colors"></div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-checked:text-blue-400">Humanizer</span>
+                    </label>
                     <label class="flex items-center gap-2 cursor-pointer group select-none bg-slate-900/50 border border-white/5 px-2 py-1 rounded-md transition-colors hover:border-purple-500/30">
                         <input type="checkbox" id="cotToggle" class="peer sr-only">
                         <div class="w-2 h-2 rounded-full bg-slate-600 peer-checked:bg-purple-500 transition-colors"></div>
@@ -209,11 +246,12 @@
     <script>
         // --- State ---
         let API_KEY = localStorage.getItem('GEMINI_API_KEY') || '';
-        let chatHistory = [];
+        let chatHistory = JSON.parse(localStorage.getItem('chat_history') || '[]');
         let currentAttachment = null;
         let isNanoBanana = false;
         let isWebEnabled = false;
         let isCoTEnabled = false;
+        let isHumanizerEnabled = false;
         let currentMode = 'chat';
         let activeSlides = [];
         let currentSlideIndex = 0;
@@ -222,8 +260,8 @@
         let abortController = null;
         let isGenerating = false;
 
-        const MODEL_TEXT = 'gemini-1.5-flash-latest';
-        const MODEL_IMAGE = 'imagen-3.0-generate-001';
+        const MODEL_TEXT = 'gemini-2.5-flash-preview-09-2025';
+        const MODEL_IMAGE = 'imagen-4.0-generate-001';
 
         // --- System Prompts ---
         const SYS_PROMPT_BASE = `
@@ -233,6 +271,15 @@ Output must be professional, structured, and visually appealing.
 - Use **bold** for emphasis.
 - Extract metrics as: ::METRIC:: Label | Value
 - If user asks for data analysis, ALWAYS end with an image prompt for an infographic wrapped in: :::IMG_PROMPT::: infographic description :::END:::
+- Format equations using LaTeX syntax: $E=mc^2$ or $$ \int_0^\infty x^2 dx $$
+`;
+
+        const SYS_PROMPT_HUMANIZER = `
+You are an expert human writer. Rewrite the text to be undetectable by AI detectors.
+- Use varied vocabulary and unexpected word choices.
+- Vary sentence length dramatically.
+- Add authentic human imperfections, idioms, and conversational flow.
+- Infuse emotional intelligence and personal tone.
 `;
 
         const SYS_PROMPT_COT = `
@@ -265,6 +312,16 @@ Create 5-8 slides.
             updateKeyStatus();
             if(!API_KEY) setTimeout(toggleSettings, 800);
             
+            // Restore History
+            if(chatHistory.length > 0) {
+                document.getElementById('welcomeScreen').classList.add('hidden');
+                chatHistory.forEach(msg => {
+                    if(msg.role === 'user') appendUserMessage(msg.parts[0].text);
+                    else if(msg.role === 'model') finalizeBotMessage(msg.parts[0].text, false); 
+                });
+                scrollToBottom();
+            }
+
             if ('webkitSpeechRecognition' in window) {
                 recognition = new webkitSpeechRecognition();
                 recognition.continuous = false;
@@ -279,7 +336,18 @@ Create 5-8 slides.
             
             document.getElementById('cotToggle').addEventListener('change', (e) => isCoTEnabled = e.target.checked);
             document.getElementById('webToggle').addEventListener('change', (e) => isWebEnabled = e.target.checked);
+            document.getElementById('humanizerToggle').addEventListener('change', (e) => isHumanizerEnabled = e.target.checked);
         });
+
+        // --- Drag & Drop ---
+        function handleDragOver(e) { e.preventDefault(); document.body.classList.add('drag-active'); }
+        function handleDragLeave(e) { e.preventDefault(); document.body.classList.remove('drag-active'); }
+        function handleDrop(e) {
+            e.preventDefault();
+            document.body.classList.remove('drag-active');
+            const files = e.dataTransfer.files;
+            if(files.length > 0) handleFile({target: {files: files}});
+        }
 
         // --- UI & Settings ---
         function toggleSettings() {
@@ -304,6 +372,15 @@ Create 5-8 slides.
             if(API_KEY) {
                 el.innerHTML = `<div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div> Ready`;
                 el.classList.add('border-emerald-500/30', 'text-emerald-400');
+            }
+        }
+
+        function clearChat() {
+            if(confirm("Clear history?")) {
+                chatHistory = [];
+                localStorage.removeItem('chat_history');
+                document.getElementById('messagesArea').innerHTML = '';
+                document.getElementById('welcomeScreen').classList.remove('hidden');
             }
         }
 
@@ -411,7 +488,11 @@ Create 5-8 slides.
                 if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
                 const contents = [...chatHistory, { role: 'user', parts }];
                 const tools = isWebEnabled ? [{ google_search: {} }] : undefined;
-                const sysParts = [{ text: SYS_PROMPT_BASE }];
+                
+                const sysParts = [];
+                if (isHumanizerEnabled) sysParts.push({ text: SYS_PROMPT_HUMANIZER });
+                else sysParts.push({ text: SYS_PROMPT_BASE });
+                
                 if (isCoTEnabled) sysParts.push({ text: SYS_PROMPT_COT });
 
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_TEXT}:streamGenerateContent?key=${API_KEY}`, {
@@ -445,6 +526,8 @@ Create 5-8 slides.
 
                 chatHistory.push({ role: 'user', parts: [{ text: prompt }] });
                 chatHistory.push({ role: 'model', parts: [{ text: fullText }] });
+                localStorage.setItem('chat_history', JSON.stringify(chatHistory));
+                
                 onComplete(fullText);
 
             } catch (e) {
@@ -587,12 +670,26 @@ Create 5-8 slides.
                 let display = text;
                 if(text.includes('</thought>')) display = text.split('<ctrl3348>')[1] || "Analyzed request. Generating response...";
                 c.innerHTML = `<div class="prose prose-invert prose-sm max-w-none text-slate-300"><span class="typing-cursor"></span>${marked.parse(display)}</div>`;
+                
+                // Prism Highlight
+                c.querySelectorAll('pre code').forEach((block) => {
+                    Prism.highlightElement(block);
+                });
+                
+                // Math Render
+                renderMathInElement(c, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError: false
+                });
             }
             lucide.createIcons();
             scrollToBottom();
         }
 
-        async function finalizeBotMessage(text) {
+        async function finalizeBotMessage(text, save=true) {
             const c = document.getElementById('current-bot-message');
             if(!c) return;
             const { reasoning, content, imgPrompt, metrics } = parseResponse(text);
@@ -600,23 +697,28 @@ Create 5-8 slides.
 
             let html = '';
             if(reasoning) {
-                html += `<div class="reasoning-accordion"><div class="reasoning-header" onclick="this.parentElement.classList.toggle('open')"><i data-lucide="brain-circuit" class="w-4 h-4 text-purple-400"></i> Analysis <i data-lucide="chevron-right" class="arrow w-3 h-3 ml-auto"></i></div><div class="reasoning-content">${reasoning}</div></div>`;
+                html += `<div class="reasoning-box"><div class="reasoning-header" onclick="this.parentElement.classList.toggle('open')"><i data-lucide="brain-circuit" class="w-4 h-4 text-purple-400"></i> Analysis <i data-lucide="chevron-right" class="arrow w-3 h-3 ml-auto"></i></div><div class="reasoning-content">${reasoning}</div></div>`;
             }
             if(metrics.length > 0) {
-                html += `<div class="metrics-grid">${metrics.map(m=>`<div class="metric-card"><div class="metric-lbl">${m.label}</div><div class="metric-val">${m.value}</div></div>`).join('')}</div>`;
+                html += `<div class="metric-grid">${metrics.map(m=>`<div class="metric-card"><div class="metric-lbl">${m.label}</div><div class="metric-val">${m.value}</div></div>`).join('')}</div>`;
             }
             html += `<div class="prose prose-invert prose-sm max-w-none text-slate-300" id="content-${id}">${marked.parse(content)}</div>`;
             
             html += `<div class="mt-6 pt-4 border-t border-white/5 flex gap-2 opacity-80 hover:opacity-100 transition-opacity">
                 <button onclick="continueGen()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs hover:bg-indigo-500/30 transition-all"><i data-lucide="fast-forward" class="w-3.5 h-3.5"></i> Continue</button>
                 <button onclick="exportDoc('content-${id}','docx')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs hover:text-white transition-all"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> DOCX</button>
+                <button onclick="speakText('content-${id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs hover:text-white transition-all"><i data-lucide="volume-2" class="w-3.5 h-3.5"></i></button>
             </div>`;
 
             c.innerHTML = html;
             c.removeAttribute('id');
+            
+            // Post-Render Effects
+            c.querySelectorAll('pre code').forEach((block) => Prism.highlightElement(block));
+            renderMathInElement(c, { delimiters: [{left: '$$', right: '$$', display: true}, {left: '$', right: '$', display: false}] });
             lucide.createIcons();
 
-            if(imgPrompt) {
+            if(imgPrompt && save) {
                 const imgDiv = document.createElement('div');
                 imgDiv.className = "mt-4 bg-slate-800/50 border border-white/5 p-2 rounded-xl w-fit animate-fade-in";
                 imgDiv.innerHTML = `<div class="flex items-center gap-2 text-xs text-slate-400 p-2"><div class="loader-ring w-3 h-3"></div> Generating Visual...</div>`;
@@ -671,6 +773,7 @@ Create 5-8 slides.
         function handleEnter(e) { if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }}
         function showToast(msg, type='info') { const t = document.getElementById('toast'); t.innerHTML = `<i data-lucide="${type==='success'?'check':type==='error'?'alert-circle':'info'}" class="${type==='success'?'text-emerald-400':type==='error'?'text-red-400':'text-blue-400'} w-5 h-5"></i><span>${msg}</span>`; t.classList.add('show'); lucide.createIcons(); setTimeout(()=>t.classList.remove('show'),3000); }
         function copyText(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); showToast('Copied','success'); }
+        function speakText(id) { const txt = document.getElementById(id).innerText; const u = new SpeechSynthesisUtterance(txt); window.speechSynthesis.speak(u); }
         async function fileToBase64(f) { return new Promise((r,j)=>{const rd=new FileReader(); rd.onload=()=>r(rd.result.split(',')[1]); rd.onerror=j; rd.readAsDataURL(f);}); }
         async function readExcel(f) { return new Promise((r,j)=>{const rd=new FileReader(); rd.onload=(e)=>{const d=new Uint8Array(e.target.result); const wb=XLSX.read(d,{type:'array'}); r(XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]));}; rd.onerror=j; rd.readAsArrayBuffer(f);}); }
         function toggleMic() { if(!recognition) return showToast('No voice support','error'); if(isRecording) recognition.stop(); else recognition.start(); isRecording = !isRecording; document.getElementById('micBtn').className = isRecording ? 'p-3 text-red-500 bg-red-500/10 rounded-xl animate-pulse transition-colors' : 'p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors'; }
