@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Gemini Office v7 - Design Studio</title>
+    <title>Super Gemini Office v11 - Singularity</title>
     
     <!-- Core Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
@@ -14,325 +14,249 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700&family=JetBrains+Mono:wght@400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
         
-        :root { --accent-primary: #3b82f6; --accent-glow: rgba(59, 130, 246, 0.5); }
+        :root { --accent: #3b82f6; --glass-border: rgba(255, 255, 255, 0.08); --glass-bg: rgba(10, 10, 20, 0.6); }
         * { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, .heading-font { font-family: 'Outfit', sans-serif; }
-        .serif-font { font-family: 'Playfair Display', serif; }
+        h1, h2, h3, .font-heading { font-family: 'Outfit', sans-serif; }
+        code, pre, .font-mono { font-family: 'JetBrains Mono', monospace; }
         
         body { background-color: #020617; color: #e2e8f0; overflow: hidden; }
 
-        /* Smooth Scrollbar */
+        /* Custom Scrollbar */
         .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        /* Advanced Typography */
-        .prose h1 { font-family: 'Outfit', sans-serif; font-size: 1.75rem; font-weight: 700; background: linear-gradient(to right, #fff, #94a3b8); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 1.5rem 0 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
-        .prose h2 { font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 600; color: #e2e8f0; margin: 1.5rem 0 0.75rem; }
-        .prose h3 { font-size: 1.1rem; font-weight: 600; color: #93c5fd; margin: 1rem 0 0.5rem; }
-        .prose p { margin-bottom: 1rem; line-height: 1.7; color: #cbd5e1; font-size: 0.95rem; }
+        /* Typography & Markdown */
+        .prose h1 { font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 800; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 1.5rem 0 1rem; }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; color: #f1f5f9; margin: 1.5rem 0 0.8rem; }
+        .prose h3 { font-size: 1.25rem; font-weight: 600; color: #60a5fa; margin: 1.25rem 0 0.6rem; }
+        .prose p { margin-bottom: 1rem; line-height: 1.7; color: #cbd5e1; }
         .prose ul { list-style: none; padding-left: 0; margin-bottom: 1rem; }
-        .prose li { position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #cbd5e1; }
-        .prose li::before { content: "→"; position: absolute; left: 0; color: #60a5fa; font-weight: bold; }
+        .prose li { position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #94a3b8; }
+        .prose li::before { content: "•"; position: absolute; left: 0; color: #3b82f6; font-weight: bold; }
         .prose strong { color: #fff; font-weight: 600; }
-        .prose code { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-size: 0.85em; font-family: 'JetBrains Mono', monospace; color: #e2e8f0; }
+        .prose blockquote { border-left: 4px solid #3b82f6; padding: 0.5rem 0 0.5rem 1rem; margin: 1.5rem 0; background: linear-gradient(90deg, rgba(59,130,246,0.1), transparent); border-radius: 0 8px 8px 0; font-style: italic; color: #e2e8f0; }
+        .prose code { background: rgba(30, 41, 59, 0.5); padding: 0.2rem 0.4rem; border-radius: 4px; border: 1px solid var(--glass-border); color: #93c5fd; font-size: 0.9em; }
+        .prose pre { background: #0f172a; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; border: 1px solid var(--glass-border); }
+        .prose table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden; margin: 1.5rem 0; }
+        .prose th { background: rgba(30, 41, 59, 0.8); padding: 0.75rem; text-align: left; color: #fff; border-bottom: 1px solid var(--glass-border); }
+        .prose td { padding: 0.75rem; border-bottom: 1px solid var(--glass-border); color: #cbd5e1; }
         
-        /* Styled Tables */
-        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid #334155; margin: 1.5rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .prose table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        .prose th { background: #1e293b; text-align: left; padding: 1rem; color: #93c5fd; font-weight: 600; border-bottom: 1px solid #334155; white-space: nowrap; }
-        .prose td { padding: 0.75rem 1rem; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
-        .prose tr:last-child td { border-bottom: none; }
-        .prose tr:hover { background: rgba(59, 130, 246, 0.05); }
-
-        /* Metric Cards Grid */
-        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-        .metric-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; backdrop-filter: blur(5px); transition: transform 0.2s; }
-        .metric-card:hover { transform: translateY(-2px); border-color: rgba(59, 130, 246, 0.3); background: rgba(30, 41, 59, 0.6); }
-        .metric-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 0.25rem; }
-        .metric-value { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 700; color: white; background: linear-gradient(to right, #60a5fa, #a78bfa); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-        /* UI Animations */
+        /* Visual Components */
+        .glass-panel { background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); }
+        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         
-        .typing-cursor::after { content: '|'; animation: blink 1s infinite; color: #60a5fa; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
+        .metric-card { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 1rem; border-radius: 12px; transition: all 0.2s; }
+        .metric-card:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); border-color: rgba(59, 130, 246, 0.3); }
+        .metric-val { font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; color: #fff; }
+        .metric-lbl { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; letter-spacing: 0.05em; font-weight: 600; }
 
-        /* Canvas Styles */
-        #canvasOverlay { backdrop-filter: blur(24px); background: rgba(2, 6, 23, 0.95); }
-        .slide-card { 
-            aspect-ratio: 16/9; background: white; color: #1e293b; border-radius: 12px; overflow: hidden; position: relative; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .slide-grid-item { cursor: pointer; border: 2px solid transparent; }
-        .slide-grid-item:hover { transform: scale(1.02); border-color: #3b82f6; }
-        
-        /* Modern Layouts for Slides */
-        .layout-modern-title { background: #0f172a; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 4rem; position: relative; overflow: hidden; }
-        .layout-modern-title::after { content: ''; position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: linear-gradient(135deg, rgba(59,130,246,0.1), transparent); clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%); }
-        .layout-split { display: grid; grid-template-columns: 45% 55%; height: 100%; }
-        .layout-content { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
-        .layout-image-container { position: relative; height: 100%; width: 100%; overflow: hidden; }
-        .layout-image { width: 100%; height: 100%; object-fit: cover; transition: transform 10s ease; }
-        
+        .reasoning-box { margin-bottom: 1rem; border: 1px solid rgba(147, 51, 234, 0.2); background: rgba(147, 51, 234, 0.05); border-radius: 8px; overflow: hidden; }
+        .reasoning-header { padding: 0.5rem 1rem; background: rgba(147, 51, 234, 0.1); color: #d8b4fe; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .reasoning-content { padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #c084fc; line-height: 1.6; display: none; border-top: 1px solid rgba(147, 51, 234, 0.1); }
+        .reasoning-box.open .reasoning-content { display: block; }
+
+        .typing-cursor::after { content: '▋'; animation: blink 1s infinite; color: #3b82f6; margin-left: 2px; }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Canvas */
+        #canvasOverlay { backdrop-filter: blur(24px); background: rgba(2, 6, 23, 0.98); }
+        .slide-card { aspect-ratio: 16/9; background: white; border-radius: 8px; overflow: hidden; position: relative; box-shadow: 0 20px 50px -12px rgba(0,0,0,0.7); }
+        .layout-title { background: #0f172a; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 4rem; position: relative; }
+        .layout-title::after { content: ''; position: absolute; right: 0; top: 0; width: 60%; height: 100%; background: linear-gradient(135deg, rgba(59,130,246,0.15), transparent); clip-path: polygon(25% 0, 100% 0, 100% 100%, 0% 100%); }
+        .layout-split { display: grid; grid-template-columns: 40% 60%; height: 100%; }
+        .layout-content { padding: 3rem; display: flex; flex-direction: column; justify-content: center; background: white; color: #0f172a; }
+        .layout-img { width: 100%; height: 100%; object-fit: cover; }
+
         /* Loader */
-        .loader-ring { width: 20px; height: 20px; border: 2px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        .loader-ring { width: 16px; height: 16px; border: 2px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        
+        /* Toast */
+        .toast { position: fixed; top: 20px; right: 20px; padding: 10px 20px; border-radius: 8px; background: #1e293b; border: 1px solid var(--glass-border); z-index: 100; transform: translateX(150%); transition: all 0.3s; display: flex; items-center; gap: 10px; font-size: 0.9rem; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
+        .toast.show { transform: translateX(0); }
     </style>
 </head>
-<body class="flex flex-col h-screen bg-[#020617] bg-[radial-gradient(circle_at_top_right,rgba(30,58,138,0.15),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(88,28,135,0.15),transparent_40%)]">
+<body class="flex flex-col h-screen bg-[#020617] bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.1),transparent_50%)]">
 
     <!-- Header -->
-    <header class="h-16 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-30">
-        <div class="flex items-center gap-4">
-            <div class="bg-gradient-to-br from-indigo-500 to-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/20">
-                <i data-lucide="bot" class="w-5 h-5 text-white"></i>
-            </div>
-            <div>
-                <h1 class="font-bold text-lg text-white leading-none tracking-tight">Super Gemini</h1>
-                <div class="flex items-center gap-2 mt-0.5">
-                    <span class="text-[10px] font-semibold text-blue-400 uppercase tracking-widest">Design Studio v7</span>
-                    <span class="w-1 h-1 rounded-full bg-slate-500"></span>
-                    <span class="text-[10px] text-slate-500" id="modelBadge">Gemini 2.5</span>
-                </div>
-            </div>
-        </div>
-        
+    <header class="h-14 glass-panel border-b-0 border-b-white/5 flex items-center justify-between px-6 sticky top-0 z-30">
         <div class="flex items-center gap-3">
-            <button onclick="clearChat()" class="p-2.5 hover:bg-white/5 rounded-xl text-slate-400 hover:text-red-400 transition-colors" title="Clear">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-            </button>
-            <div class="h-6 w-px bg-white/10 mx-1"></div>
+            <div class="bg-gradient-to-br from-indigo-500 to-blue-600 p-2 rounded-lg shadow-lg shadow-blue-500/20"><i data-lucide="bot" class="w-5 h-5 text-white"></i></div>
+            <h1 class="font-heading font-bold text-lg text-white tracking-tight">Super Gemini <span class="text-slate-500 text-xs font-normal ml-1">v11 Singularity</span></h1>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="clearChat()" class="p-2 hover:bg-white/5 rounded-lg text-slate-400 hover:text-red-400 transition-colors" title="Clear Chat"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            <div class="h-5 w-px bg-white/10"></div>
             <button onclick="toggleSettings()" id="keyStatus" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-slate-700 hover:border-slate-500 text-xs font-medium text-slate-400 transition-all">
                 <div class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div> API Key
             </button>
         </div>
     </header>
 
-    <!-- Canvas Overlay -->
+    <!-- Canvas -->
     <div id="canvasOverlay" class="hidden fixed inset-0 z-50 flex flex-col p-6 opacity-0 transition-opacity duration-300">
-        <!-- Canvas Toolbar -->
-        <div class="w-full flex justify-between items-center mb-6 bg-slate-900/50 p-4 rounded-2xl border border-white/10 backdrop-blur-md">
+        <div class="w-full flex justify-between items-center mb-6 bg-slate-900/90 p-4 rounded-xl border border-white/10 shadow-2xl backdrop-blur-md">
             <div class="flex items-center gap-4">
-                <h2 class="text-xl font-bold text-white flex items-center gap-2 font-outfit">
-                    <i data-lucide="presentation" class="w-5 h-5 text-blue-400"></i> Presentation
-                </h2>
-                <div class="h-6 w-px bg-white/10"></div>
-                <div class="flex gap-1 bg-slate-800 p-1 rounded-lg">
+                <h2 class="text-lg font-bold text-white flex items-center gap-2 font-heading"><i data-lucide="presentation" class="w-5 h-5 text-blue-400"></i> Canvas</h2>
+                <div class="h-5 w-px bg-white/10"></div>
+                <div class="flex gap-1 bg-slate-800 p-1 rounded-lg border border-white/5">
                     <button onclick="setCanvasView('focus')" id="btnFocus" class="p-1.5 rounded bg-slate-700 text-white shadow-sm"><i data-lucide="monitor" class="w-4 h-4"></i></button>
                     <button onclick="setCanvasView('grid')" id="btnGrid" class="p-1.5 rounded text-slate-400 hover:text-white"><i data-lucide="grid" class="w-4 h-4"></i></button>
                 </div>
             </div>
-            <div class="flex gap-3">
-                <button onclick="downloadPPTFromCanvas()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-all shadow-lg shadow-blue-500/20">
-                    <i data-lucide="download" class="w-4 h-4"></i> Export .PPTX
-                </button>
-                <button onclick="closeCanvas()" class="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors border border-white/5">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
+            <div class="flex gap-2">
+                <button onclick="downloadPPTFromCanvas()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg flex items-center gap-2 text-xs font-bold uppercase tracking-wider transition-all shadow-lg shadow-blue-500/20"><i data-lucide="download" class="w-4 h-4"></i> Export PPTX</button>
+                <button onclick="closeCanvas()" class="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg border border-white/10"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
         </div>
         
-        <!-- Viewport -->
-        <div class="flex-1 relative overflow-hidden flex items-center justify-center">
-            
-            <!-- Focus View -->
-            <div id="focusView" class="relative w-full max-w-5xl aspect-video bg-black rounded-xl shadow-2xl overflow-hidden border border-slate-700 ring-1 ring-white/10 transition-all">
+        <div class="flex-1 relative overflow-hidden flex items-center justify-center outline-none" tabindex="0" id="canvasContainer" onkeydown="handleCanvasKey(event)">
+            <div id="focusView" class="relative w-full max-w-6xl aspect-video bg-black rounded-xl shadow-2xl overflow-hidden border border-slate-700 ring-1 ring-white/10 transition-all">
                 <div id="canvasSlideContainer" class="w-full h-full"></div>
-                
-                <!-- Nav -->
                 <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-slate-900/90 backdrop-blur-xl px-4 py-2 rounded-full border border-white/10 shadow-2xl z-20">
-                    <button onclick="prevSlide()" class="p-2 hover:bg-white/10 rounded-full text-slate-300 hover:text-white transition-colors"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
-                    <span class="text-xs font-mono text-slate-400"><span id="currSlide" class="text-white">1</span> / <span id="totalSlide">5</span></span>
-                    <button onclick="nextSlide()" class="p-2 hover:bg-white/10 rounded-full text-slate-300 hover:text-white transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                    <button onclick="prevSlide()" class="p-2 hover:bg-white/10 rounded-full text-slate-300 hover:text-white"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                    <span class="text-xs font-mono text-slate-400"><span id="currSlide" class="text-white font-bold">1</span> / <span id="totalSlide">1</span></span>
+                    <button onclick="nextSlide()" class="p-2 hover:bg-white/10 rounded-full text-slate-300 hover:text-white"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                 </div>
             </div>
-
-            <!-- Grid View -->
-            <div id="gridView" class="hidden w-full h-full overflow-y-auto custom-scroll">
-                <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4 pb-20">
-                    <!-- Grid items injected here -->
-                </div>
-            </div>
+            <div id="gridView" class="hidden w-full h-full overflow-y-auto custom-scroll"><div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-3 xl:grid-cols-4 gap-6 p-4 pb-20"></div></div>
         </div>
     </div>
 
-    <!-- Settings Modal -->
+    <!-- Settings -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0">
         <div class="bg-slate-900 border border-white/10 p-6 rounded-2xl w-full max-w-md shadow-2xl transform scale-95 transition-all duration-300">
-            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-emerald-500"></i> API Configuration</h2>
+            <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2 font-heading"><i data-lucide="shield-check" class="w-5 h-5 text-emerald-500"></i> Setup</h2>
             <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Google Gemini API Key</label>
-                    <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono">
-                </div>
-                <div class="flex gap-3 pt-2">
-                    <button onclick="saveSettings()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20">Secure Save</button>
+                <input type="password" id="apiKeyInput" placeholder="Paste Gemini API Key..." class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 font-mono transition-all">
+                <div class="flex gap-3">
+                    <button onclick="saveSettings()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20">Save Securely</button>
                     <button onclick="toggleSettings()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl transition-all">Cancel</button>
                 </div>
-                <p class="text-[10px] text-slate-500 text-center flex justify-center items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Stored locally on your device</p>
+                <p class="text-[10px] text-slate-500 text-center">Key is stored strictly in your browser's local storage.</p>
             </div>
         </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- Main -->
     <main class="flex-1 overflow-hidden relative flex flex-col w-full max-w-5xl mx-auto">
-        <div id="chatContainer" class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-10 scroll-smooth custom-scroll w-full">
-            
-            <!-- Welcome -->
+        <div id="chatContainer" class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-8 scroll-smooth custom-scroll w-full">
             <div id="welcomeScreen" class="min-h-[60vh] flex flex-col items-center justify-center text-center p-4 animate-fade-in">
-                <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/20 mb-8 border border-white/10 relative group">
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/20 mb-6 border border-white/10 relative group">
                     <div class="absolute inset-0 bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                     <i data-lucide="sparkles" class="w-10 h-10 text-white relative z-10"></i>
                 </div>
-                
-                <h2 class="text-4xl font-bold text-white mb-3 tracking-tight font-outfit">Design. Analyze. Create.</h2>
-                <p class="text-slate-400 max-w-md mb-10 text-sm leading-relaxed">
-                    Welcome to the <strong>Design Studio</strong>. I can generate visual presentations, detailed reports with data cards, and high-fidelity assets.
+                <h2 class="text-3xl font-bold text-white mb-3 tracking-tight font-heading">Super Gemini Office</h2>
+                <p class="text-slate-400 max-w-md mb-8 text-sm leading-relaxed">
+                    <strong>v11 Omni-Tool Edition</strong>.<br>Unlimited streaming, visual reasoning, and embedded AI art.
                 </p>
-
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl">
-                    <button onclick="setMode('presentation')" class="group p-4 bg-slate-900/50 hover:bg-blue-600/10 border border-white/5 hover:border-blue-500/50 rounded-2xl text-left transition-all relative overflow-hidden">
-                        <i data-lucide="presentation" class="w-6 h-6 text-blue-400 mb-3 group-hover:scale-110 transition-transform"></i>
-                        <h3 class="text-sm font-semibold text-white mb-1">Presentation</h3>
-                        <p class="text-[11px] text-slate-500 group-hover:text-blue-200/70 leading-tight">Visual slides with AI images</p>
-                    </button>
-                    
-                    <button onclick="setMode('analyze')" class="group p-4 bg-slate-900/50 hover:bg-emerald-600/10 border border-white/5 hover:border-emerald-500/50 rounded-2xl text-left transition-all relative overflow-hidden">
-                        <i data-lucide="bar-chart-2" class="w-6 h-6 text-emerald-400 mb-3 group-hover:scale-110 transition-transform"></i>
-                        <h3 class="text-sm font-semibold text-white mb-1">Analytics</h3>
-                        <p class="text-[11px] text-slate-500 group-hover:text-emerald-200/70 leading-tight">Data to Smart Cards</p>
-                    </button>
-                    
-                    <button onclick="setMode('report')" class="group p-4 bg-slate-900/50 hover:bg-purple-600/10 border border-white/5 hover:border-purple-500/50 rounded-2xl text-left transition-all relative overflow-hidden">
-                        <i data-lucide="file-text" class="w-6 h-6 text-purple-400 mb-3 group-hover:scale-110 transition-transform"></i>
-                        <h3 class="text-sm font-semibold text-white mb-1">Reports</h3>
-                        <p class="text-[11px] text-slate-500 group-hover:text-purple-200/70 leading-tight">Styled documents</p>
-                    </button>
-
-                    <button onclick="setMode('image')" class="group p-4 bg-slate-900/50 hover:bg-amber-600/10 border border-white/5 hover:border-amber-500/50 rounded-2xl text-left transition-all relative overflow-hidden">
-                        <i data-lucide="image" class="w-6 h-6 text-amber-400 mb-3 group-hover:scale-110 transition-transform"></i>
-                        <h3 class="text-sm font-semibold text-white mb-1">Studio</h3>
-                        <p class="text-[11px] text-slate-500 group-hover:text-amber-200/70 leading-tight">Nano Banana Art</p>
-                    </button>
+                    <button onclick="setMode('presentation')" class="group p-4 bg-slate-900/50 hover:bg-blue-600/10 border border-white/5 hover:border-blue-500/50 rounded-xl text-left transition-all relative overflow-hidden"><i data-lucide="presentation" class="w-5 h-5 text-blue-400 mb-3 group-hover:scale-110 transition-transform"></i><h3 class="text-xs font-bold text-white uppercase tracking-wider mb-1">Presentation</h3><p class="text-[10px] text-slate-500 group-hover:text-blue-200">Canvas + Images</p></button>
+                    <button onclick="setMode('analyze')" class="group p-4 bg-slate-900/50 hover:bg-emerald-600/10 border border-white/5 hover:border-emerald-500/50 rounded-xl text-left transition-all relative overflow-hidden"><i data-lucide="bar-chart-2" class="w-5 h-5 text-emerald-400 mb-3 group-hover:scale-110 transition-transform"></i><h3 class="text-xs font-bold text-white uppercase tracking-wider mb-1">Analytics</h3><p class="text-[10px] text-slate-500 group-hover:text-emerald-200">Data + Visuals</p></button>
+                    <button onclick="setMode('report')" class="group p-4 bg-slate-900/50 hover:bg-purple-600/10 border border-white/5 hover:border-purple-500/50 rounded-xl text-left transition-all relative overflow-hidden"><i data-lucide="file-text" class="w-5 h-5 text-purple-400 mb-3 group-hover:scale-110 transition-transform"></i><h3 class="text-xs font-bold text-white uppercase tracking-wider mb-1">Reports</h3><p class="text-[10px] text-slate-500 group-hover:text-purple-200">Infinite Docs</p></button>
+                    <button onclick="setMode('image')" class="group p-4 bg-slate-900/50 hover:bg-amber-600/10 border border-white/5 hover:border-amber-500/50 rounded-xl text-left transition-all relative overflow-hidden"><i data-lucide="image" class="w-5 h-5 text-amber-400 mb-3 group-hover:scale-110 transition-transform"></i><h3 class="text-xs font-bold text-white uppercase tracking-wider mb-1">Studio</h3><p class="text-[10px] text-slate-500 group-hover:text-amber-200">Nano Art</p></button>
                 </div>
             </div>
-
-            <!-- Chat Messages -->
-            <div id="messagesArea" class="flex flex-col gap-10 pb-4 w-full"></div>
-            
-            <!-- Loader -->
-            <div id="loader" class="hidden w-full max-w-4xl mx-auto">
-                <div class="flex gap-4">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20"><i data-lucide="bot" class="w-4 h-4 text-white"></i></div>
-                    <div class="space-y-3 w-full">
-                        <div class="flex items-center gap-3">
-                            <span id="loaderText" class="text-xs text-blue-400 font-medium tracking-wide uppercase">Thinking</span>
-                            <div class="loader-ring"></div>
-                        </div>
-                        <div id="progressContainer" class="hidden w-full max-w-xs bg-slate-800 rounded-full h-1 overflow-hidden">
-                            <div id="progressBar" class="bg-blue-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            <div id="messagesArea" class="flex flex-col gap-8 pb-4 w-full"></div>
         </div>
     </main>
 
-    <!-- Input Area -->
+    <!-- Footer -->
     <footer class="bg-[#020617]/80 backdrop-blur-xl border-t border-white/5 p-4 pb-6 z-20">
         <div class="max-w-4xl mx-auto w-full space-y-3">
-            
-            <!-- Context Bar -->
             <div class="flex items-center justify-between px-1">
-                <div class="flex items-center gap-2">
-                    <button onclick="toggleHumanizer()" id="btnHumanizer" class="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-blue-500/20 bg-blue-500/10 text-blue-400 transition-all hover:bg-blue-500/20">
-                        Humanizer: ON
-                    </button>
-                    <button onclick="toggleWeb()" id="btnWeb" class="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 transition-all hover:border-emerald-500/30 hover:text-emerald-400">
-                        Web: OFF
-                    </button>
+                <div class="flex items-center gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer group select-none bg-slate-900/50 border border-white/5 px-2 py-1 rounded-md transition-colors hover:border-purple-500/30">
+                        <input type="checkbox" id="cotToggle" class="peer sr-only">
+                        <div class="w-2 h-2 rounded-full bg-slate-600 peer-checked:bg-purple-500 transition-colors"></div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-checked:text-purple-400">Deep Think</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer group select-none bg-slate-900/50 border border-white/5 px-2 py-1 rounded-md transition-colors hover:border-emerald-500/30">
+                        <input type="checkbox" id="webToggle" class="peer sr-only">
+                        <div class="w-2 h-2 rounded-full bg-slate-600 peer-checked:bg-emerald-500 transition-colors"></div>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 peer-checked:text-emerald-400">Web</span>
+                    </label>
                 </div>
-                <button id="nanoBtn" onclick="toggleNano()" class="text-xs flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700/50 hover:bg-white/5 text-slate-400 hover:text-white transition-all select-none">
-                    <i data-lucide="image" class="w-3.5 h-3.5"></i> <span>Nano Off</span>
+                <button id="nanoBtn" onclick="toggleNano()" class="text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 px-2 py-1 rounded-md border border-white/5 bg-slate-900/50 text-slate-400 hover:text-white transition-all select-none">
+                    <i data-lucide="image" class="w-3 h-3"></i> <span>Nano Off</span>
                 </button>
             </div>
-
-            <!-- Attachment Pill -->
             <div id="attachmentPreview" class="hidden animate-fade-in flex items-center gap-3 bg-slate-900 border border-white/10 p-2 pl-3 rounded-lg w-fit shadow-lg">
-                <div class="flex items-center gap-2">
-                    <i id="attIcon" data-lucide="file" class="w-4 h-4 text-blue-400"></i>
-                    <div class="flex flex-col">
-                        <span id="attName" class="text-xs font-medium text-white max-w-[150px] truncate">File</span>
-                    </div>
-                </div>
+                <div class="flex items-center gap-2"><i id="attIcon" data-lucide="file" class="w-4 h-4 text-blue-400"></i><span id="attName" class="text-xs font-medium text-white max-w-[150px] truncate">File</span></div>
                 <button onclick="clearAttachment()" class="p-1 hover:bg-white/10 rounded-md text-slate-400 hover:text-red-400"><i data-lucide="x" class="w-3 h-3"></i></button>
             </div>
-
-            <!-- Input Box -->
             <div class="relative group">
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-indigo-600/10 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
                 <div class="relative flex items-end gap-2 bg-slate-900 border border-slate-800 group-focus-within:border-slate-600 rounded-2xl p-2 transition-all shadow-xl">
                     <button onclick="document.getElementById('fileInput').click()" class="p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
                     <input type="file" id="fileInput" class="hidden" onchange="handleFile(event)" accept=".pdf,.xlsx,.xls,image/*">
-                    
-                    <textarea id="promptInput" rows="1" placeholder="Type a message..." class="w-full bg-transparent border-none focus:ring-0 resize-none py-3 text-slate-200 placeholder:text-slate-600 max-h-32 custom-scroll text-sm" oninput="autoResize(this)" onkeydown="handleEnter(event)"></textarea>
-                    
+                    <textarea id="promptInput" rows="1" placeholder="Ask Super Gemini..." class="w-full bg-transparent border-none focus:ring-0 resize-none py-3 text-slate-200 placeholder:text-slate-600 max-h-32 custom-scroll text-sm" oninput="autoResize(this)" onkeydown="handleEnter(event)"></textarea>
                     <button id="micBtn" onclick="toggleMic()" class="p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors"><i data-lucide="mic" class="w-5 h-5"></i></button>
-                    <button onclick="sendMessage()" class="p-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"><i data-lucide="arrow-up" class="w-5 h-5"></i></button>
+                    <button id="actionBtn" onclick="handleAction()" class="p-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"><i data-lucide="arrow-up" class="w-5 h-5"></i></button>
                 </div>
             </div>
         </div>
     </footer>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="toast flex items-center gap-3 shadow-2xl"></div>
+    <div id="toast" class="toast"></div>
 
     <script>
-        // --- Core State ---
+        // --- State ---
         let API_KEY = localStorage.getItem('GEMINI_API_KEY') || '';
         let chatHistory = [];
         let currentAttachment = null;
         let isNanoBanana = false;
         let isWebEnabled = false;
-        let isHumanizerEnabled = true;
+        let isCoTEnabled = false;
         let currentMode = 'chat';
         let activeSlides = [];
         let currentSlideIndex = 0;
-        let canvasView = 'focus'; // 'focus' or 'grid'
-        
-        // Models
-        const MODEL_TEXT = 'gemini-2.5-flash-preview-09-2025';
-        const MODEL_IMAGE = 'imagen-4.0-generate-001';
+        let isRecording = false;
+        let recognition = null;
+        let abortController = null;
+        let isGenerating = false;
 
-        // --- Improved Prompts ---
-        const SYS_PROMPT_CHAT = `
-You are Super Gemini Design Studio.
-FORMATTING RULES:
-1. **Metrics**: If outputting data/numbers, ALWAYS format them as "::METRIC:: [Label] | [Value]" on a new line. Example: ::METRIC:: Revenue | $5.2M
-2. **Styling**: Use Markdown headers (#). Use **bold** for emphasis.
-3. **Tables**: Create standard markdown tables for comparisons.
-4. **Tone**: Professional, insightful, concise.
+        const MODEL_TEXT = 'gemini-1.5-flash-latest';
+        const MODEL_IMAGE = 'imagen-3.0-generate-001';
+
+        // --- System Prompts ---
+        const SYS_PROMPT_BASE = `
+You are Super Gemini Office.
+Output must be professional, structured, and visually appealing.
+- Use Markdown headers (#).
+- Use **bold** for emphasis.
+- Extract metrics as: ::METRIC:: Label | Value
+- If user asks for data analysis, ALWAYS end with an image prompt for an infographic wrapped in: :::IMG_PROMPT::: infographic description :::END:::
+`;
+
+        const SYS_PROMPT_COT = `
+You are a Deep Reasoning AI.
+Before answering, you MUST provide a Chain-of-Thought (CoT) enclosed in <thought> tags.
+1. Deconstruct the request.
+2. Outline plan.
+3. Identify key logic.
+4. Draft structure.
+Then provide the answer.
 `;
 
         const SYS_PROMPT_PRES = `
-You are a Presentation Architect. Output strictly VALID JSON array of slide objects. No markdown code blocks.
-Structure:
+You are a Presentation Architect. Output strictly VALID JSON array of slide objects. No markdown.
 [
   {
     "layout": "title" | "split_right" | "split_left" | "big_number",
     "title": "Title",
     "subtitle": "Subtitle",
-    "points": ["Bullet 1", "Bullet 2"],
-    "image_prompt": "Photorealistic 8k render of [Topic], cinematic lighting"
+    "points": ["Point 1", "Point 2"],
+    "image_prompt": "Photorealistic 8k render of [Topic]"
   }
 ]
-Create 5-8 slides. Narrate a story.
+Create 5-8 slides.
 `;
 
         // --- Init ---
@@ -340,9 +264,24 @@ Create 5-8 slides. Narrate a story.
             lucide.createIcons();
             updateKeyStatus();
             if(!API_KEY) setTimeout(toggleSettings, 800);
+            
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false;
+                recognition.onresult = (e) => {
+                    const txt = e.results[0][0].transcript;
+                    const el = document.getElementById('promptInput');
+                    el.value += (el.value ? ' ' : '') + txt;
+                    autoResize(el);
+                };
+                recognition.onend = () => { isRecording = false; updateMicIcon(); };
+            }
+            
+            document.getElementById('cotToggle').addEventListener('change', (e) => isCoTEnabled = e.target.checked);
+            document.getElementById('webToggle').addEventListener('change', (e) => isWebEnabled = e.target.checked);
         });
 
-        // --- UI Interactions ---
+        // --- UI & Settings ---
         function toggleSettings() {
             const m = document.getElementById('settingsModal');
             m.classList.toggle('hidden');
@@ -352,12 +291,12 @@ Create 5-8 slides. Narrate a story.
 
         function saveSettings() {
             const k = document.getElementById('apiKeyInput').value.trim();
-            if(!k) return showToast('Key is required', 'error');
+            if(!k) return showToast('API Key required', 'error');
             localStorage.setItem('GEMINI_API_KEY', k);
             API_KEY = k;
             updateKeyStatus();
             toggleSettings();
-            showToast('Securely saved', 'success');
+            showToast('Saved', 'success');
         }
 
         function updateKeyStatus() {
@@ -372,13 +311,12 @@ Create 5-8 slides. Narrate a story.
             currentMode = mode;
             const input = document.getElementById('promptInput');
             const prompts = {
-                presentation: "Create a visual pitch deck for [Topic].",
-                analyze: "Analyze the Q3 performance metrics.",
-                report: "Write an executive summary about [Topic].",
-                image: "A futuristic workspace with holographic screens..."
+                presentation: "Create a pitch deck for [Topic].",
+                analyze: "Analyze the attached data.",
+                report: "Write a comprehensive report about [Topic].",
+                image: "A futuristic cityscape..."
             };
             
-            // Auto toggle Nano
             if (mode === 'image' && !isNanoBanana) toggleNano();
             if (mode !== 'image' && isNanoBanana) toggleNano();
             
@@ -389,71 +327,37 @@ Create 5-8 slides. Narrate a story.
             if (idx !== -1) input.setSelectionRange(idx, idx + 7);
         }
 
-        function toggleHumanizer() {
-            isHumanizerEnabled = !isHumanizerEnabled;
-            const btn = document.getElementById('btnHumanizer');
-            if(isHumanizerEnabled) {
-                btn.innerHTML = "Humanizer: ON";
-                btn.className = "text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-blue-500/20 bg-blue-500/10 text-blue-400 transition-all";
-            } else {
-                btn.innerHTML = "Humanizer: OFF";
-                btn.className = "text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-500 transition-all";
-            }
-        }
-
-        function toggleWeb() {
-            isWebEnabled = !isWebEnabled;
-            const btn = document.getElementById('btnWeb');
-            if(isWebEnabled) {
-                btn.innerHTML = "Web: ON";
-                btn.className = "text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 transition-all";
-            } else {
-                btn.innerHTML = "Web: OFF";
-                btn.className = "text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-500 transition-all";
-            }
-        }
-
         function toggleNano() {
             isNanoBanana = !isNanoBanana;
             const btn = document.getElementById('nanoBtn');
             const input = document.getElementById('promptInput');
-            
             if (isNanoBanana) {
                 btn.innerHTML = '<i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-400"></i> <span class="text-yellow-100">Nano ON</span>';
-                btn.className = "text-xs flex items-center gap-2 px-3 py-1.5 rounded-lg border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all select-none";
-                input.placeholder = "Describe the visual you want...";
+                btn.className = "text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 px-2 py-1 rounded-md border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all select-none";
+                input.placeholder = "Describe visual...";
                 currentMode = 'image';
             } else {
                 btn.innerHTML = '<i data-lucide="image" class="w-3.5 h-3.5"></i> <span>Nano Off</span>';
-                btn.className = "text-xs flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700/50 hover:bg-white/5 text-slate-400 hover:text-white transition-all select-none";
+                btn.className = "text-[10px] font-bold uppercase tracking-wider flex items-center gap-1.5 px-2 py-1 rounded-md border border-white/5 bg-slate-900/50 text-slate-400 hover:text-white transition-all select-none";
                 input.placeholder = "Type a message...";
                 currentMode = 'chat';
             }
             lucide.createIcons();
         }
 
-        // --- File & Input ---
-        function handleFile(e) {
-            const f = e.target.files[0];
-            if(!f) return;
-            currentAttachment = f;
-            document.getElementById('attachmentPreview').classList.remove('hidden');
-            document.getElementById('attachmentPreview').classList.add('flex');
-            document.getElementById('attName').innerText = f.name;
-            const map = {image:'image', pdf:'file-text', excel:'bar-chart-2', unknown:'paperclip'};
-            let type = f.type.includes('image') ? 'image' : f.type.includes('pdf') ? 'pdf' : f.name.match(/\.xls(x)?$/) ? 'excel' : 'unknown';
-            document.getElementById('attIcon').innerHTML = `<i data-lucide="${map[type]}" class="w-4 h-4 text-blue-400"></i>`;
-            lucide.createIcons();
+        // --- Core Logic ---
+        function handleAction() {
+            if (isGenerating) {
+                if (abortController) abortController.abort();
+                isGenerating = false;
+                document.getElementById('actionBtn').innerHTML = `<i data-lucide="arrow-up" class="w-5 h-5"></i>`;
+                lucide.createIcons();
+                showToast("Stopped", "info");
+            } else {
+                sendMessage();
+            }
         }
 
-        function clearAttachment() {
-            currentAttachment = null;
-            document.getElementById('fileInput').value = '';
-            document.getElementById('attachmentPreview').classList.add('hidden');
-            document.getElementById('attachmentPreview').classList.remove('flex');
-        }
-
-        // --- Logic Router ---
         async function sendMessage() {
             const input = document.getElementById('promptInput');
             const text = input.value.trim();
@@ -464,140 +368,151 @@ Create 5-8 slides. Narrate a story.
             appendUserMessage(text, currentAttachment);
             input.value = '';
             input.style.height = 'auto';
-
             const att = currentAttachment;
             clearAttachment();
-            
-            // Intent Detection
+
             let intent = currentMode;
             if (intent === 'chat') {
                 const lower = text.toLowerCase();
                 if (lower.includes('presentation') || lower.includes('deck')) intent = 'presentation';
-                else if (lower.includes('analyze') || lower.includes('report') || lower.includes('summary')) intent = 'analyze'; // Unified Analysis/Report
-                else if (lower.includes('image') || lower.includes('picture')) intent = 'image';
+                else if (lower.includes('image')) intent = 'image';
             }
 
             if (intent === 'presentation') await handlePresentation(text, att);
             else if (intent === 'image') await handleImage(text);
-            else await handleAnalysis(text, att);
-        }
-
-        // --- Logic: Analysis/Chat (Streaming Simulation) ---
-        async function handleAnalysis(text, att) {
-            showLoader("Analyzing Request...");
-            try {
-                const parts = [{text: text}];
-                if (att) {
-                    if (att.name.match(/\.xls(x)?$/)) {
-                        const csv = await readExcel(att);
-                        parts.push({ text: `\n\n[Context Data]:\n${csv}` });
-                    } else {
-                        const b64 = await fileToBase64(att);
-                        parts.push({ inlineData: { mimeType: att.type, data: b64 } });
-                    }
-                }
-
-                const contents = [...chatHistory, { role: 'user', parts }];
-                const tools = isWebEnabled ? [{ google_search: {} }] : undefined;
-                const sys = isHumanizerEnabled ? { parts: [{ text: SYS_PROMPT_CHAT }] } : undefined;
-
-                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_TEXT}:generateContent?key=${API_KEY}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ contents, systemInstruction: sys, tools })
-                });
-
-                const data = await res.json();
-                if(data.error) throw new Error(data.error.message);
-                
-                const resultText = data.candidates[0].content.parts[0].text;
-                
-                // Save context
-                chatHistory.push({ role: 'user', parts: [{ text: text }] });
-                chatHistory.push({ role: 'model', parts: [{ text: resultText }] });
-                
-                // Parse for Smart Cards (Metrics)
-                const { cleanText, metrics } = parseMetrics(resultText);
-                
-                hideLoader();
-                await typeWriterMessage(cleanText, metrics);
-
-            } catch(e) {
-                hideLoader();
-                appendError(e.message);
+            else {
+                createBotMessagePlaceholder();
+                await streamGemini(text, (chunk) => updateBotMessage(chunk), (final, err) => {
+                    if(err) updateBotMessage(final, true);
+                    else finalizeBotMessage(final);
+                }, att);
             }
         }
 
-        // --- Logic: Presentation ---
+        // --- Streaming Chat ---
+        async function streamGemini(prompt, onChunk, onComplete, attachment) {
+            try {
+                isGenerating = true;
+                document.getElementById('actionBtn').innerHTML = `<i data-lucide="square" class="w-3 h-3 fill-white"></i>`;
+                lucide.createIcons();
+                
+                abortController = new AbortController();
+                const parts = [{text: prompt}];
+                if (attachment) {
+                    if (attachment.name.match(/\.xls(x)?$/)) {
+                        const csv = await readExcel(attachment);
+                        parts.push({ text: `\n\n[Data]:\n${csv}` });
+                    } else {
+                        const b64 = await fileToBase64(attachment);
+                        parts.push({ inlineData: { mimeType: attachment.type, data: b64 } });
+                    }
+                }
+
+                if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+                const contents = [...chatHistory, { role: 'user', parts }];
+                const tools = isWebEnabled ? [{ google_search: {} }] : undefined;
+                const sysParts = [{ text: SYS_PROMPT_BASE }];
+                if (isCoTEnabled) sysParts.push({ text: SYS_PROMPT_COT });
+
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_TEXT}:streamGenerateContent?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents, systemInstruction: { parts: sysParts }, tools }),
+                    signal: abortController.signal
+                });
+
+                if (!response.ok) throw new Error("API Error " + response.status);
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullText = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value, { stream: true });
+                    const lines = chunk.split('\n');
+                    for (const line of lines) {
+                        const clean = line.replace(/^data: /, '').trim();
+                        if (!clean) continue;
+                        try {
+                            const json = JSON.parse(clean);
+                            const t = json.candidates?.[0]?.content?.parts?.[0]?.text;
+                            if (t) { fullText += t; onChunk(fullText); }
+                        } catch (e) {}
+                    }
+                }
+
+                chatHistory.push({ role: 'user', parts: [{ text: prompt }] });
+                chatHistory.push({ role: 'model', parts: [{ text: fullText }] });
+                onComplete(fullText);
+
+            } catch (e) {
+                if (e.name !== 'AbortError') onComplete("Error: " + e.message, true);
+            } finally {
+                isGenerating = false;
+                document.getElementById('actionBtn').innerHTML = `<i data-lucide="arrow-up" class="w-5 h-5"></i>`;
+                lucide.createIcons();
+            }
+        }
+
+        // --- Presentation ---
         async function handlePresentation(text, att) {
-            showLoader("Architecting Deck...");
+            createBotMessagePlaceholder();
+            updateBotMessage("Architecting deck...");
             try {
                 const parts = [{text: text}];
-                // Add attachment context if exists
                 if (att) {
                     if (att.name.match(/\.xls(x)?$/)) {
                         const csv = await readExcel(att);
-                        parts.push({ text: `\n\n[Context Data]:\n${csv}` });
+                        parts.push({ text: `\n\n[Data]:\n${csv}` });
                     } else {
                         const b64 = await fileToBase64(att);
                         parts.push({ inlineData: { mimeType: att.type, data: b64 } });
                     }
                 }
-
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_TEXT}:generateContent?key=${API_KEY}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        contents: [{parts}],
-                        systemInstruction: { parts: [{text: SYS_PROMPT_PRES}] }
-                    })
+                    body: JSON.stringify({ contents: [{parts}], systemInstruction: { parts: [{text: SYS_PROMPT_PRES}] } })
                 });
-                
                 const data = await res.json();
-                if(data.error) throw new Error(data.error.message);
-                
-                let rawText = data.candidates[0].content.parts[0].text;
-                let slidesJSON = [];
+                let raw = data.candidates[0].content.parts[0].text;
+                let slides = [];
                 try {
-                    slidesJSON = JSON.parse(rawText.replace(/```json/g, '').replace(/```/g, '').trim());
+                    slides = JSON.parse(raw.replace(/```json/g, '').replace(/```/g, '').trim());
                 } catch(e) {
-                    hideLoader();
-                    await typeWriterMessage(rawText); // Fallback to text
+                    updateBotMessage(raw); // Fallback
                     return;
                 }
 
-                // Image Gen Loop
-                showLoader(`Designing ${slidesJSON.length} slides...`, true);
-                const progress = document.getElementById('progressBar');
+                updateBotMessage(`Designing ${slides.length} slides with visuals...`);
                 
-                for(let i=0; i<slidesJSON.length; i++) {
-                    progress.style.width = `${((i+1)/slidesJSON.length)*100}%`;
-                    const slide = slidesJSON[i];
-                    if(slide.image_prompt) {
+                for(let i=0; i<slides.length; i++) {
+                    if(slides[i].image_prompt) {
                         try {
                             const imgRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_IMAGE}:predict?key=${API_KEY}`, {
                                 method: 'POST',
                                 headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({ instances: [{ prompt: slide.image_prompt }], parameters: { sampleCount: 1 } })
+                                body: JSON.stringify({ instances: [{ prompt: slides[i].image_prompt }], parameters: { sampleCount: 1 } })
                             });
                             const imgData = await imgRes.json();
-                            if(imgData.predictions) slide.imageData = `data:image/png;base64,${imgData.predictions[0].bytesBase64Encoded}`;
-                        } catch(e) { console.log('Image skip'); }
+                            if(imgData.predictions) slides[i].imageData = `data:image/png;base64,${imgData.predictions[0].bytesBase64Encoded}`;
+                        } catch(e) {}
                     }
                 }
+                
+                const ph = document.getElementById('current-bot-message');
+                if(ph) ph.parentElement.remove();
+                appendPresentationCard(slides);
 
-                hideLoader();
-                appendPresentationCard(slidesJSON);
-
-            } catch(e) {
-                hideLoader();
-                appendError(e.message);
-            }
+            } catch(e) { updateBotMessage(e.message, true); }
         }
 
-        // --- Logic: Image ---
+        // --- Image ---
         async function handleImage(text) {
-            showLoader("Rendering Art...");
+            createBotMessagePlaceholder();
+            updateBotMessage("Generating...");
             try {
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_IMAGE}:predict?key=${API_KEY}`, {
                     method: 'POST',
@@ -606,240 +521,204 @@ Create 5-8 slides. Narrate a story.
                 });
                 const data = await res.json();
                 if(!data.predictions) throw new Error("Gen Failed");
-                
-                hideLoader();
+                const ph = document.getElementById('current-bot-message');
+                if(ph) ph.parentElement.remove();
                 appendImageCard(`data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`, text);
-            } catch(e) {
-                hideLoader();
-                appendError(e.message);
+            } catch(e) { updateBotMessage(e.message, true); }
+        }
+
+        // --- Parsing & Rendering ---
+        function parseResponse(text) {
+            let reasoning = null;
+            let content = text;
+            let imgPrompt = null;
+            let metrics = [];
+
+            // Extract Thought
+            const thoughtMatch = text.match(/<thought>([\s\S]*?)<\/thought>/);
+            if (thoughtMatch) {
+                reasoning = thoughtMatch[1].trim();
+                content = text.replace(/<ctrl3347>[\s\S]*?<\/thought>/, '').trim();
             }
-        }
 
-        // --- Smart Parsing ---
-        function parseMetrics(text) {
-            const metrics = [];
-            const lines = text.split('\n');
+            // Extract Img Prompt
+            const imgMatch = content.match(/:::IMG_PROMPT:::(.*?):::END:::/s);
+            if (imgMatch) {
+                imgPrompt = imgMatch[1].trim();
+                content = content.replace(/:::IMG_PROMPT:::.*?:::END:::/s, '').trim();
+            }
+
+            // Extract Metrics
+            const lines = content.split('\n');
             const cleanLines = [];
-            
-            lines.forEach(line => {
-                if (line.includes('::METRIC::')) {
-                    const parts = line.replace('::METRIC::', '').split('|');
-                    if (parts.length === 2) {
-                        metrics.push({ label: parts[0].trim(), value: parts[1].trim() });
-                    }
-                } else {
-                    cleanLines.push(line);
-                }
+            lines.forEach(l => {
+                if(l.includes('::METRIC::')) {
+                    const p = l.replace('::METRIC::','').split('|');
+                    if(p.length===2) metrics.push({label: p[0].trim(), value: p[1].trim()});
+                } else cleanLines.push(l);
             });
-            return { cleanText: cleanLines.join('\n'), metrics };
+            content = cleanLines.join('\n');
+
+            return { reasoning, content, imgPrompt, metrics };
         }
 
-        // --- UI Rendering ---
         function appendUserMessage(text, att) {
             const div = document.createElement('div');
             div.className = "flex justify-end animate-fade-in";
-            div.innerHTML = `
-                <div class="max-w-[85%] flex flex-col items-end gap-2">
-                    <div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-sm shadow-xl shadow-blue-900/20 text-sm leading-relaxed font-light">
-                        ${att ? `<div class="flex items-center gap-2 bg-blue-700/50 p-2 rounded-lg mb-2 text-xs border border-white/10"><i data-lucide="paperclip" class="w-3 h-3"></i> ${att.name}</div>` : ''}
-                        <p class="whitespace-pre-wrap">${text}</p>
-                    </div>
-                </div>`;
+            div.innerHTML = `<div class="max-w-[85%] bg-blue-600 text-white p-4 rounded-2xl rounded-tr-sm shadow-xl shadow-blue-900/20 text-sm leading-relaxed">${att ? `<div class="flex items-center gap-2 bg-blue-700/50 p-2 rounded-lg mb-2 text-xs border border-white/10"><i data-lucide="paperclip" class="w-3 h-3"></i> ${att.name}</div>` : ''}<p class="whitespace-pre-wrap">${text}</p></div>`;
             document.getElementById('messagesArea').appendChild(div);
             scrollToBottom();
         }
 
-        // The Typewriter Effect for Text
-        async function typeWriterMessage(text, metrics = []) {
+        function createBotMessagePlaceholder() {
             const div = document.createElement('div');
-            div.className = "flex gap-4 w-full max-w-4xl mx-auto";
-            const id = 'msg-' + Date.now();
-            
-            // Metrics HTML
-            let metricsHtml = '';
-            if (metrics.length > 0) {
-                metricsHtml = `<div class="metrics-grid">
-                    ${metrics.map(m => `
-                        <div class="metric-card">
-                            <div class="metric-label">${m.label}</div>
-                            <div class="metric-value">${m.value}</div>
-                        </div>
-                    `).join('')}
-                </div>`;
-            }
-
-            div.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 mt-1"><i data-lucide="bot" class="w-4 h-4 text-white"></i></div>
-                <div class="flex-1 min-w-0">
-                    <div class="group relative">
-                        ${metricsHtml}
-                        <div class="prose prose-invert prose-sm max-w-none text-slate-300 typing-container">
-                            <span class="typing-cursor"></span>
-                        </div>
-                        <div class="mt-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button onclick="exportDoc('${id}', 'docx')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-500/50 text-slate-400 hover:text-blue-400 text-xs transition-all"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> DOCX</button>
-                            <button onclick="exportDoc('${id}', 'xlsx')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-emerald-500/50 text-slate-400 hover:text-emerald-400 text-xs transition-all"><i data-lucide="table" class="w-3.5 h-3.5"></i> XLSX</button>
-                            <button onclick="copyText('${id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-white/20 text-slate-400 hover:text-white text-xs transition-all"><i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy</button>
-                        </div>
-                    </div>
-                    <div id="${id}" class="hidden raw-text">${text}</div>
-                </div>`;
-            
+            div.className = "flex gap-4 animate-fade-in";
+            div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 mt-1"><i data-lucide="bot" class="w-4 h-4 text-white"></i></div><div class="max-w-[85%] w-full"><div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl rounded-tl-sm shadow-sm" id="current-bot-message"><div class="flex items-center gap-2 text-slate-400 text-sm"><div class="loader-ring"></div> Thinking...</div></div></div>`;
             document.getElementById('messagesArea').appendChild(div);
             lucide.createIcons();
             scrollToBottom();
+        }
 
-            // Typing Logic
-            const container = div.querySelector('.typing-container');
-            const markdown = marked.parse(text); // Parse markdown first
+        function updateBotMessage(text, isError=false) {
+            const c = document.getElementById('current-bot-message');
+            if(!c) return;
+            if(isError) c.innerHTML = `<div class="text-red-400 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-4 h-4"></i> ${text}</div>`;
+            else {
+                let display = text;
+                if(text.includes('</thought>')) display = text.split('<ctrl3348>')[1] || "Analyzed request. Generating response...";
+                c.innerHTML = `<div class="prose prose-invert prose-sm max-w-none text-slate-300"><span class="typing-cursor"></span>${marked.parse(display)}</div>`;
+            }
+            lucide.createIcons();
+            scrollToBottom();
+        }
+
+        async function finalizeBotMessage(text) {
+            const c = document.getElementById('current-bot-message');
+            if(!c) return;
+            const { reasoning, content, imgPrompt, metrics } = parseResponse(text);
+            const id = 'msg-' + Date.now();
+
+            let html = '';
+            if(reasoning) {
+                html += `<div class="reasoning-accordion"><div class="reasoning-header" onclick="this.parentElement.classList.toggle('open')"><i data-lucide="brain-circuit" class="w-4 h-4 text-purple-400"></i> Analysis <i data-lucide="chevron-right" class="arrow w-3 h-3 ml-auto"></i></div><div class="reasoning-content">${reasoning}</div></div>`;
+            }
+            if(metrics.length > 0) {
+                html += `<div class="metrics-grid">${metrics.map(m=>`<div class="metric-card"><div class="metric-lbl">${m.label}</div><div class="metric-val">${m.value}</div></div>`).join('')}</div>`;
+            }
+            html += `<div class="prose prose-invert prose-sm max-w-none text-slate-300" id="content-${id}">${marked.parse(content)}</div>`;
             
-            // Simple approach: Inject fully parsed HTML, but simulate "loading" by opacity or chunking
-            // For complex HTML (tables), true typing is hard. We will fade-in chunks.
-            container.innerHTML = markdown; 
-            container.classList.add('animate-fade-in');
-            div.querySelector('.typing-cursor').remove();
+            html += `<div class="mt-6 pt-4 border-t border-white/5 flex gap-2 opacity-80 hover:opacity-100 transition-opacity">
+                <button onclick="continueGen()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-xs hover:bg-indigo-500/30 transition-all"><i data-lucide="fast-forward" class="w-3.5 h-3.5"></i> Continue</button>
+                <button onclick="exportDoc('content-${id}','docx')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-xs hover:text-white transition-all"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> DOCX</button>
+            </div>`;
+
+            c.innerHTML = html;
+            c.removeAttribute('id');
+            lucide.createIcons();
+
+            if(imgPrompt) {
+                const imgDiv = document.createElement('div');
+                imgDiv.className = "mt-4 bg-slate-800/50 border border-white/5 p-2 rounded-xl w-fit animate-fade-in";
+                imgDiv.innerHTML = `<div class="flex items-center gap-2 text-xs text-slate-400 p-2"><div class="loader-ring w-3 h-3"></div> Generating Visual...</div>`;
+                c.appendChild(imgDiv);
+                
+                try {
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_IMAGE}:predict?key=${API_KEY}`, {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ instances: [{ prompt: imgPrompt }], parameters: { sampleCount: 1 } })
+                    });
+                    const d = await res.json();
+                    if(d.predictions) {
+                        imgDiv.innerHTML = `<img src="data:image/png;base64,${d.predictions[0].bytesBase64Encoded}" class="rounded-lg shadow-lg max-w-md w-full" />`;
+                    } else imgDiv.remove();
+                } catch(e) { imgDiv.remove(); }
+            }
+        }
+
+        // --- Helpers ---
+        function appendPresentationCard(slides) {
+            activeSlides = slides;
+            const div = document.createElement('div');
+            div.className = "flex gap-4 w-full max-w-4xl mx-auto animate-fade-in";
+            div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 mt-1"><i data-lucide="presentation" class="w-4 h-4 text-white"></i></div><div class="w-full max-w-2xl bg-slate-900 border border-slate-700 p-0 rounded-2xl overflow-hidden shadow-2xl hover:border-blue-500/30 transition-colors cursor-default"><div class="p-4 border-b border-slate-800 bg-slate-950/50 flex justify-between items-center backdrop-blur-md"><div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span><span class="text-sm font-bold text-white tracking-wide">Presentation Ready</span></div><span class="text-xs font-mono text-slate-500 bg-slate-800/50 px-2 py-1 rounded-md border border-white/5">${slides.length} SLIDES</span></div><div class="p-8 text-center bg-gradient-to-b from-slate-900 to-slate-900/50"><h3 class="text-2xl font-bold text-white mb-2 font-heading">${slides[0].title}</h3><p class="text-sm text-slate-400 mb-8 font-light">Includes high-fidelity AI visuals.</p><div class="flex gap-4 justify-center"><button onclick="openCanvas()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all hover:scale-105 active:scale-95"><i data-lucide="monitor-play" class="w-4 h-4"></i> Open Canvas</button><button onclick="downloadPPTFromCanvas()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 border border-slate-700 hover:border-slate-600 transition-all"><i data-lucide="download" class="w-4 h-4"></i> PPTX</button></div></div></div>`;
+            document.getElementById('messagesArea').appendChild(div);
+            lucide.createIcons();
+            scrollToBottom();
         }
 
         function appendImageCard(url, prompt) {
             const div = document.createElement('div');
             div.className = "flex gap-4 w-full max-w-4xl mx-auto animate-fade-in";
-            div.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/20 mt-1"><i data-lucide="sparkles" class="w-4 h-4 text-white"></i></div>
-                <div class="flex-1">
-                    <div class="bg-slate-900 border border-slate-800 p-2 rounded-2xl shadow-xl w-fit">
-                        <img src="${url}" class="rounded-xl border border-slate-700/50 shadow-2xl max-w-md w-full" />
-                        <div class="px-3 py-2 flex justify-between items-center">
-                            <p class="text-xs text-slate-500 italic truncate max-w-[200px]">${prompt}</p>
-                            <a href="${url}" download="nano-art.png" class="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"><i data-lucide="download" class="w-4 h-4"></i></a>
-                        </div>
-                    </div>
-                </div>`;
+            div.innerHTML = `<div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/20 mt-1"><i data-lucide="sparkles" class="w-4 h-4 text-white"></i></div><div class="flex-1"><div class="bg-slate-900 border border-slate-800 p-2 rounded-2xl shadow-xl w-fit"><img src="${url}" class="rounded-xl border border-slate-700/50 shadow-2xl max-w-md w-full" /><div class="px-3 py-2 flex justify-between items-center"><p class="text-xs text-slate-500 italic truncate max-w-[200px]">${prompt}</p><a href="${url}" download="nano-art.png" class="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"><i data-lucide="download" class="w-4 h-4"></i></a></div></div></div>`;
             document.getElementById('messagesArea').appendChild(div);
             lucide.createIcons();
             scrollToBottom();
         }
 
-        function appendPresentationCard(slides) {
-            activeSlides = slides;
-            const div = document.createElement('div');
-            div.className = "flex gap-4 w-full max-w-4xl mx-auto animate-fade-in";
-            div.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 mt-1"><i data-lucide="presentation" class="w-4 h-4 text-white"></i></div>
-                <div class="w-full max-w-2xl bg-slate-900 border border-slate-700 p-0 rounded-2xl overflow-hidden shadow-2xl hover:border-blue-500/30 transition-colors cursor-default">
-                    <div class="p-4 border-b border-slate-800 bg-slate-950/50 flex justify-between items-center backdrop-blur-md">
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
-                            <span class="text-sm font-bold text-white tracking-wide">Presentation Ready</span>
-                        </div>
-                        <span class="text-xs font-mono text-slate-500 bg-slate-800/50 px-2 py-1 rounded-md border border-white/5">${slides.length} SLIDES</span>
-                    </div>
-                    <div class="p-8 text-center bg-gradient-to-b from-slate-900 to-slate-900/50">
-                        <h3 class="text-2xl font-bold text-white mb-2 font-outfit">${slides[0].title}</h3>
-                        <p class="text-sm text-slate-400 mb-8 font-light">Includes high-fidelity AI visuals and narrative structure.</p>
-                        <div class="flex gap-4 justify-center">
-                            <button onclick="openCanvas()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all hover:scale-105 active:scale-95">
-                                <i data-lucide="monitor-play" class="w-4 h-4"></i> Open Canvas
-                            </button>
-                            <button onclick="downloadPPTFromCanvas()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 border border-slate-700 hover:border-slate-600 transition-all">
-                                <i data-lucide="download" class="w-4 h-4"></i> Download .PPTX
-                            </button>
-                        </div>
-                    </div>
-                </div>`;
-            document.getElementById('messagesArea').appendChild(div);
-            lucide.createIcons();
-            scrollToBottom();
+        // --- File & Utils ---
+        function handleFile(e) {
+            const f = e.target.files[0]; if(!f) return;
+            currentAttachment = f;
+            document.getElementById('attachmentPreview').classList.remove('hidden');
+            document.getElementById('attachmentPreview').classList.add('flex');
+            document.getElementById('attName').innerText = f.name;
         }
+        function clearAttachment() { currentAttachment = null; document.getElementById('fileInput').value = ''; document.getElementById('attachmentPreview').classList.add('hidden'); document.getElementById('attachmentPreview').classList.remove('flex'); }
+        function continueGen() { document.getElementById('promptInput').value = "Continue"; sendMessage(); }
+        function scrollToBottom() { document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight; }
+        function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
+        function handleEnter(e) { if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }}
+        function showToast(msg, type='info') { const t = document.getElementById('toast'); t.innerHTML = `<i data-lucide="${type==='success'?'check':type==='error'?'alert-circle':'info'}" class="${type==='success'?'text-emerald-400':type==='error'?'text-red-400':'text-blue-400'} w-5 h-5"></i><span>${msg}</span>`; t.classList.add('show'); lucide.createIcons(); setTimeout(()=>t.classList.remove('show'),3000); }
+        function copyText(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); showToast('Copied','success'); }
+        async function fileToBase64(f) { return new Promise((r,j)=>{const rd=new FileReader(); rd.onload=()=>r(rd.result.split(',')[1]); rd.onerror=j; rd.readAsDataURL(f);}); }
+        async function readExcel(f) { return new Promise((r,j)=>{const rd=new FileReader(); rd.onload=(e)=>{const d=new Uint8Array(e.target.result); const wb=XLSX.read(d,{type:'array'}); r(XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]));}; rd.onerror=j; rd.readAsArrayBuffer(f);}); }
+        function toggleMic() { if(!recognition) return showToast('No voice support','error'); if(isRecording) recognition.stop(); else recognition.start(); isRecording = !isRecording; document.getElementById('micBtn').className = isRecording ? 'p-3 text-red-500 bg-red-500/10 rounded-xl animate-pulse transition-colors' : 'p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors'; }
+        function updateMicIcon() { document.getElementById('micBtn').className = 'p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors'; }
 
-        function appendError(msg) {
-            const div = document.createElement('div');
-            div.className = "flex gap-4 w-full max-w-4xl mx-auto animate-fade-in";
-            div.innerHTML = `
-                <div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i></div>
-                <div class="bg-red-950/20 border border-red-500/20 text-red-400 p-4 rounded-2xl text-sm w-full font-mono">${msg}</div>`;
-            document.getElementById('messagesArea').appendChild(div);
-            lucide.createIcons();
-            scrollToBottom();
-        }
-
-        // --- Canvas & Export Logic ---
-        function openCanvas() {
-            document.getElementById('canvasOverlay').classList.remove('hidden');
-            setTimeout(() => document.getElementById('canvasOverlay').classList.remove('opacity-0'), 10);
-            renderCanvas();
-        }
-        function closeCanvas() {
-            document.getElementById('canvasOverlay').classList.add('opacity-0');
-            setTimeout(() => document.getElementById('canvasOverlay').classList.add('hidden'), 300);
-        }
-        function setCanvasView(v) {
-            canvasView = v;
-            document.getElementById('focusView').classList.toggle('hidden', v==='grid');
-            document.getElementById('gridView').classList.toggle('hidden', v==='focus');
-            document.getElementById('btnFocus').className = v==='focus'?'p-1.5 rounded bg-slate-700 text-white shadow-sm':'p-1.5 rounded text-slate-400 hover:text-white';
-            document.getElementById('btnGrid').className = v==='grid'?'p-1.5 rounded bg-slate-700 text-white shadow-sm':'p-1.5 rounded text-slate-400 hover:text-white';
-            renderCanvas();
-        }
-
+        // --- Canvas & Export ---
+        function openCanvas() { document.getElementById('canvasOverlay').classList.remove('hidden'); setTimeout(()=>document.getElementById('canvasOverlay').classList.remove('opacity-0'),10); renderCanvas(); }
+        function closeCanvas() { document.getElementById('canvasOverlay').classList.add('opacity-0'); setTimeout(()=>document.getElementById('canvasOverlay').classList.add('hidden'),300); }
+        function setCanvasView(v) { document.getElementById('focusView').classList.toggle('hidden',v==='grid'); document.getElementById('gridView').classList.toggle('hidden',v==='focus'); renderCanvas(); }
         function renderCanvas() {
-            // Render Focus
             const container = document.getElementById('canvasSlideContainer');
             const slide = activeSlides[currentSlideIndex];
             const img = slide.imageData || 'https://via.placeholder.com/1920x1080/0f172a/ffffff?text=AI+Visual';
-            
-            // Focus Layouts
-            let html = '';
-            if (slide.layout === 'title') {
-                html = `<div class="layout-modern-title"><h1 class="text-6xl font-bold text-white mb-4 z-10">${slide.title}</h1><p class="text-2xl text-blue-400 z-10">${slide.subtitle||''}</p></div>`;
-            } else {
-                html = `<div class="layout-split">
-                    <div class="layout-content bg-white">
-                        <h2 class="text-4xl font-bold text-slate-900 mb-2">${slide.title}</h2>
-                        <h3 class="text-xl text-blue-600 mb-8 font-medium">${slide.subtitle||''}</h3>
-                        <ul class="slide-bullets text-slate-600 space-y-4">${slide.points.map(p=>`<li>${p}</li>`).join('')}</ul>
-                    </div>
-                    <div class="layout-image-container"><img src="${img}" class="layout-image" /></div>
-                </div>`;
-            }
+            let html = slide.layout === 'title' ? 
+                `<div class="layout-title"><h1 class="text-6xl font-bold font-heading mb-4 z-10">${slide.title}</h1><p class="text-2xl text-blue-400 z-10">${slide.subtitle||''}</p></div>` : 
+                `<div class="layout-split"><div class="layout-content"><h2 class="text-4xl font-bold text-slate-900 mb-2 font-heading">${slide.title}</h2><h3 class="text-xl text-blue-600 mb-8 font-medium">${slide.subtitle||''}</h3><ul class="text-slate-600 space-y-4 text-lg pl-5 list-disc">${slide.points.map(p=>`<li>${p}</li>`).join('')}</ul></div><div class="relative"><img src="${img}" class="layout-img" /></div></div>`;
             container.innerHTML = html;
             document.getElementById('currSlide').innerText = currentSlideIndex + 1;
             document.getElementById('totalSlide').innerText = activeSlides.length;
-
-            // Render Grid
-            const grid = document.getElementById('gridContainer');
-            grid.innerHTML = activeSlides.map((s,i) => `
-                <div onclick="currentSlideIndex=${i}; setCanvasView('focus')" class="slide-grid-item aspect-video bg-white rounded-lg overflow-hidden relative group">
-                    <div class="absolute inset-0 bg-slate-900 flex items-center justify-center text-xs text-white p-2 text-center">${s.title}</div>
-                    <div class="absolute bottom-2 right-2 text-[10px] text-slate-500 bg-white/90 px-1.5 rounded">${i+1}</div>
-                </div>
-            `).join('');
+            document.getElementById('gridContainer').innerHTML = activeSlides.map((s,i)=>`<div onclick="currentSlideIndex=${i};setCanvasView('focus')" class="slide-card aspect-video bg-white relative cursor-pointer hover:ring-2 hover:ring-blue-500"><div class="absolute inset-0 bg-slate-900 flex items-center justify-center text-xs text-white p-2 text-center font-heading">${s.title}</div><div class="absolute bottom-2 right-2 text-[10px] text-slate-500 bg-white/90 px-1.5 rounded">${i+1}</div></div>`).join('');
         }
-
-        function nextSlide() { if(currentSlideIndex < activeSlides.length-1) { currentSlideIndex++; renderCanvas(); } }
-        function prevSlide() { if(currentSlideIndex > 0) { currentSlideIndex--; renderCanvas(); } }
+        function nextSlide() { if(currentSlideIndex<activeSlides.length-1) { currentSlideIndex++; renderCanvas(); } }
+        function prevSlide() { if(currentSlideIndex>0) { currentSlideIndex--; renderCanvas(); } }
+        
+        function handleCanvasKey(e) {
+            if(document.getElementById('canvasOverlay').classList.contains('hidden')) return;
+            if(e.key === 'ArrowRight') nextSlide();
+            if(e.key === 'ArrowLeft') prevSlide();
+            if(e.key === 'Escape') closeCanvas();
+        }
+        window.addEventListener('keydown', handleCanvasKey);
 
         function downloadPPTFromCanvas() {
             if(!window.PptxGenJS) return showToast('Lib Loading','error');
-            const pres = new PptxGenJS();
-            pres.layout = 'LAYOUT_16x9';
-            pres.defineSlideMaster({ title: 'MASTER', background: { color: '0F172A' } });
-
+            const pres = new PptxGenJS(); pres.layout='LAYOUT_16x9'; pres.defineSlideMaster({ title:'MASTER', background:{color:'0F172A'} });
             activeSlides.forEach(s => {
-                const sl = pres.addSlide({ masterName: 'MASTER' });
+                const sl = pres.addSlide({ masterName:'MASTER' });
                 if(s.layout === 'title') {
-                    sl.background = { color: '020617' };
-                    sl.addText(s.title, { x:1, y:2.5, w:'80%', fontSize:44, color:'FFFFFF', bold:true, align:'center' });
-                    sl.addText(s.subtitle||'', { x:1, y:4, w:'80%', fontSize:20, color:'3B82F6', align:'center' });
+                    sl.background={color:'020617'}; sl.addText(s.title,{x:1,y:2.5,w:'80%',fontSize:44,color:'FFFFFF',bold:true,align:'center',fontFace:'Outfit'}); sl.addText(s.subtitle||'',{x:1,y:4,w:'80%',fontSize:20,color:'3B82F6',align:'center',fontFace:'Inter'});
                 } else {
-                    sl.addText(s.title, { x:0.5, y:0.5, w:'90%', fontSize:28, color:'FFFFFF', bold:true });
-                    sl.addText(s.points.map(p=>({text:p, options:{fontSize:16, color:'CBD5E1', bullet:true}})), { x:0.5, y:1.5, w:'45%', h:5, valign:'top' });
-                    if(s.imageData) sl.addImage({ data:s.imageData, x:5.5, y:1.5, w:4.5, h:4.5, sizing:{type:'cover', w:4.5, h:4.5} });
+                    sl.addText(s.title,{x:0.5,y:0.5,w:'90%',fontSize:28,color:'FFFFFF',bold:true,fontFace:'Outfit'});
+                    sl.addText(s.points.map(p=>({text:p,options:{fontSize:16,color:'CBD5E1',bullet:true}})),{x:0.5,y:1.5,w:'45%',h:5,valign:'top',fontFace:'Inter'});
+                    if(s.imageData) sl.addImage({data:s.imageData,x:5.5,y:1.5,w:4.5,h:4.5});
                 }
             });
-            pres.writeFile({ fileName: 'Super_Gemini_Deck.pptx' });
+            pres.writeFile({ fileName: 'SuperGemini_Deck.pptx' });
         }
 
-        // --- Standard Exports ---
         async function exportDoc(id, type) {
             const raw = document.getElementById(id).innerText;
             const name = "Super_Gemini_Export";
@@ -847,43 +726,13 @@ Create 5-8 slides. Narrate a story.
                 const { Document, Packer, Paragraph, TextRun } = window.docx;
                 const doc = new Document({ sections: [{ children: raw.split('\n').map(l => new Paragraph(l)) }] });
                 const blob = await Packer.toBlob(doc);
-                saveAs(blob, name+'.docx');
+                const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name+'.docx'; a.click();
             } else {
                 const wb = XLSX.utils.book_new();
                 const ws = XLSX.utils.aoa_to_sheet(raw.split('\n').map(l=>[l]));
                 XLSX.utils.book_append_sheet(wb, ws, "Data");
                 XLSX.writeFile(wb, name+'.xlsx');
             }
-        }
-
-        // --- Helpers ---
-        function showLoader(txt, prog=false) {
-            document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('loaderText').innerText = txt;
-            document.getElementById('progressContainer').classList.toggle('hidden', !prog);
-            document.getElementById('progressBar').style.width = '0%';
-            scrollToBottom();
-        }
-        function hideLoader() { document.getElementById('loader').classList.add('hidden'); }
-        function scrollToBottom() { document.getElementById('chatContainer').scrollTop = document.getElementById('chatContainer').scrollHeight; }
-        function autoResize(el) { el.style.height = 'auto'; el.style.height = el.scrollHeight + 'px'; }
-        function handleEnter(e) { if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }}
-        function showToast(msg, type='info') {
-            const t = document.getElementById('toast');
-            t.innerHTML = `<i data-lucide="${type==='success'?'check':type==='error'?'alert-circle':'info'}" class="${type==='success'?'text-emerald-400':type==='error'?'text-red-400':'text-blue-400'} w-5 h-5"></i><span>${msg}</span>`;
-            t.classList.add('show');
-            lucide.createIcons();
-            setTimeout(()=>t.classList.remove('show'),3000);
-        }
-        function copyText(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); showToast('Copied to clipboard','success'); }
-        function saveAs(blob, name) { const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); }
-        async function fileToBase64(f) { return new Promise((r,j)=>{const rd=new FileReader(); rd.onload=()=>r(rd.result.split(',')[1]); rd.onerror=j; rd.readAsDataURL(f);}); }
-        async function readExcel(f) { return new Promise((r,j)=>{const rd=new FileReader(); rd.onload=(e)=>{const d=new Uint8Array(e.target.result); const wb=XLSX.read(d,{type:'array'}); r(XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]));}; rd.onerror=j; rd.readAsArrayBuffer(f);}); }
-        function toggleMic() {
-            if(!recognition) return showToast('No voice support','error');
-            if(isRecording) recognition.stop(); else recognition.start();
-            isRecording = !isRecording;
-            document.getElementById('micBtn').className = isRecording ? 'p-3 text-red-500 bg-red-500/10 rounded-xl animate-pulse transition-colors' : 'p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors';
         }
     </script>
 </body>
