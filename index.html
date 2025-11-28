@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Gemini Office v4.1</title>
+    <title>Super Gemini Office v7 - Design Studio</title>
     
     <!-- Core Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
@@ -14,158 +14,227 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700&family=JetBrains+Mono:wght@400&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
         
+        :root { --accent-primary: #3b82f6; --accent-glow: rgba(59, 130, 246, 0.5); }
         * { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .heading-font { font-family: 'Outfit', sans-serif; }
+        .serif-font { font-family: 'Playfair Display', serif; }
+        
         body { background-color: #020617; color: #e2e8f0; overflow: hidden; }
 
-        /* Custom Scrollbar */
-        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        /* Smooth Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: #475569; }
 
-        /* Markdown Styles */
-        .prose h1 { font-size: 1.5rem; font-weight: 700; color: #f8fafc; margin-top: 1rem; margin-bottom: 0.5rem; }
-        .prose h2 { font-size: 1.25rem; font-weight: 600; color: #e2e8f0; margin-top: 1rem; margin-bottom: 0.5rem; }
-        .prose p { margin-bottom: 0.75rem; line-height: 1.6; color: #cbd5e1; }
-        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        /* Advanced Typography */
+        .prose h1 { font-family: 'Outfit', sans-serif; font-size: 1.75rem; font-weight: 700; background: linear-gradient(to right, #fff, #94a3b8); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 1.5rem 0 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.5rem; }
+        .prose h2 { font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 600; color: #e2e8f0; margin: 1.5rem 0 0.75rem; }
+        .prose h3 { font-size: 1.1rem; font-weight: 600; color: #93c5fd; margin: 1rem 0 0.5rem; }
+        .prose p { margin-bottom: 1rem; line-height: 1.7; color: #cbd5e1; font-size: 0.95rem; }
+        .prose ul { list-style: none; padding-left: 0; margin-bottom: 1rem; }
+        .prose li { position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem; color: #cbd5e1; }
+        .prose li::before { content: "→"; position: absolute; left: 0; color: #60a5fa; font-weight: bold; }
         .prose strong { color: #fff; font-weight: 600; }
-        .prose code { background: #1e293b; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-size: 0.85em; font-family: 'JetBrains Mono', monospace; }
-        .prose pre { background: #0f172a; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 1rem 0; border: 1px solid #1e293b; }
-        .prose table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
-        .prose th { background: #1e293b; text-align: left; padding: 0.75rem; border: 1px solid #334155; color: #f8fafc; }
-        .prose td { border: 1px solid #334155; padding: 0.75rem; color: #cbd5e1; }
-
-        /* UI Elements */
-        .glass-header { background: rgba(2, 6, 23, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
-        .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .prose code { background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.1); padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-size: 0.85em; font-family: 'JetBrains Mono', monospace; color: #e2e8f0; }
         
-        .typing-dot { width: 6px; height: 6px; background: #6366f1; border-radius: 50%; animation: typing 1.4s infinite ease-in-out both; }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typing { 0%, 80%, 100% { transform: scale(0); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+        /* Styled Tables */
+        .table-container { overflow-x: auto; border-radius: 8px; border: 1px solid #334155; margin: 1.5rem 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .prose table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .prose th { background: #1e293b; text-align: left; padding: 1rem; color: #93c5fd; font-weight: 600; border-bottom: 1px solid #334155; white-space: nowrap; }
+        .prose td { padding: 0.75rem 1rem; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
+        .prose tr:last-child td { border-bottom: none; }
+        .prose tr:hover { background: rgba(59, 130, 246, 0.05); }
 
-        /* Presentation Card */
-        .ppt-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; transition: transform 0.2s; }
-        .ppt-card:hover { border-color: #3b82f6; }
-        .slide-preview { aspect-ratio: 16/9; background: #020617; border-radius: 8px; overflow: hidden; position: relative; border: 1px solid #334155; background-size: cover; background-position: center; }
+        /* Metric Cards Grid */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .metric-card { background: rgba(30, 41, 59, 0.4); border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 12px; backdrop-filter: blur(5px); transition: transform 0.2s; }
+        .metric-card:hover { transform: translateY(-2px); border-color: rgba(59, 130, 246, 0.3); background: rgba(30, 41, 59, 0.6); }
+        .metric-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 0.25rem; }
+        .metric-value { font-family: 'Outfit', sans-serif; font-size: 1.5rem; font-weight: 700; color: white; background: linear-gradient(to right, #60a5fa, #a78bfa); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* Toast */
-        .toast { position: fixed; top: 90px; right: 24px; padding: 12px 24px; border-radius: 12px; font-size: 0.875rem; font-weight: 500; z-index: 100; transform: translateX(120%); transition: all 0.4s; display: flex; align-items: center; gap: 8px; border: 1px solid rgba(255,255,255,0.1); background: #1e293b; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .toast.show { transform: translateX(0); }
+        /* UI Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        .typing-cursor::after { content: '|'; animation: blink 1s infinite; color: #60a5fa; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        /* Canvas Styles */
+        #canvasOverlay { backdrop-filter: blur(24px); background: rgba(2, 6, 23, 0.95); }
+        .slide-card { 
+            aspect-ratio: 16/9; background: white; color: #1e293b; border-radius: 12px; overflow: hidden; position: relative; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .slide-grid-item { cursor: pointer; border: 2px solid transparent; }
+        .slide-grid-item:hover { transform: scale(1.02); border-color: #3b82f6; }
+        
+        /* Modern Layouts for Slides */
+        .layout-modern-title { background: #0f172a; height: 100%; display: flex; flex-direction: column; justify-content: center; padding: 4rem; position: relative; overflow: hidden; }
+        .layout-modern-title::after { content: ''; position: absolute; top: 0; right: 0; width: 50%; height: 100%; background: linear-gradient(135deg, rgba(59,130,246,0.1), transparent); clip-path: polygon(20% 0, 100% 0, 100% 100%, 0% 100%); }
+        .layout-split { display: grid; grid-template-columns: 45% 55%; height: 100%; }
+        .layout-content { padding: 3rem; display: flex; flex-direction: column; justify-content: center; }
+        .layout-image-container { position: relative; height: 100%; width: 100%; overflow: hidden; }
+        .layout-image { width: 100%; height: 100%; object-fit: cover; transition: transform 10s ease; }
+        
+        /* Loader */
+        .loader-ring { width: 20px; height: 20px; border: 2px solid #3b82f6; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="flex flex-col h-screen bg-[#020617] bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(59,130,246,0.15),rgba(255,255,255,0))]">
+<body class="flex flex-col h-screen bg-[#020617] bg-[radial-gradient(circle_at_top_right,rgba(30,58,138,0.15),transparent_40%),radial-gradient(circle_at_bottom_left,rgba(88,28,135,0.15),transparent_40%)]">
 
     <!-- Header -->
-    <header class="h-16 glass-header flex items-center justify-between px-6 sticky top-0 z-30">
-        <div class="flex items-center gap-3.5">
-            <div class="bg-gradient-to-br from-indigo-500 to-blue-600 p-2 rounded-xl shadow-lg shadow-blue-900/20">
+    <header class="h-16 border-b border-white/5 bg-slate-950/50 backdrop-blur-xl flex items-center justify-between px-6 sticky top-0 z-30">
+        <div class="flex items-center gap-4">
+            <div class="bg-gradient-to-br from-indigo-500 to-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/20">
                 <i data-lucide="bot" class="w-5 h-5 text-white"></i>
             </div>
-            <div class="flex flex-col">
-                <h1 class="font-bold text-lg tracking-tight text-white leading-none">Super Gemini</h1>
-                <span class="text-[10px] font-semibold text-blue-400 uppercase tracking-wider mt-0.5">Office Suite v4.1</span>
+            <div>
+                <h1 class="font-bold text-lg text-white leading-none tracking-tight">Super Gemini</h1>
+                <div class="flex items-center gap-2 mt-0.5">
+                    <span class="text-[10px] font-semibold text-blue-400 uppercase tracking-widest">Design Studio v7</span>
+                    <span class="w-1 h-1 rounded-full bg-slate-500"></span>
+                    <span class="text-[10px] text-slate-500" id="modelBadge">Gemini 2.5</span>
+                </div>
             </div>
         </div>
         
         <div class="flex items-center gap-3">
-            <button onclick="clearChat()" class="p-2 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-red-400 transition-colors" title="Clear Chat">
+            <button onclick="clearChat()" class="p-2.5 hover:bg-white/5 rounded-xl text-slate-400 hover:text-red-400 transition-colors" title="Clear">
                 <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
-            <div class="h-6 w-px bg-slate-800 mx-1"></div>
-            <div id="keyStatus" class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 cursor-pointer hover:border-slate-700 transition-colors" onclick="toggleSettings()">
-                <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
-                <span class="text-xs font-medium text-slate-400">No Key</span>
-            </div>
-            <button onclick="toggleSettings()" class="p-2 hover:bg-slate-800 rounded-lg text-slate-300 hover:text-white transition-all">
-                <i data-lucide="settings" class="w-5 h-5"></i>
+            <div class="h-6 w-px bg-white/10 mx-1"></div>
+            <button onclick="toggleSettings()" id="keyStatus" class="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-dashed border-slate-700 hover:border-slate-500 text-xs font-medium text-slate-400 transition-all">
+                <div class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></div> API Key
             </button>
         </div>
     </header>
 
+    <!-- Canvas Overlay -->
+    <div id="canvasOverlay" class="hidden fixed inset-0 z-50 flex flex-col p-6 opacity-0 transition-opacity duration-300">
+        <!-- Canvas Toolbar -->
+        <div class="w-full flex justify-between items-center mb-6 bg-slate-900/50 p-4 rounded-2xl border border-white/10 backdrop-blur-md">
+            <div class="flex items-center gap-4">
+                <h2 class="text-xl font-bold text-white flex items-center gap-2 font-outfit">
+                    <i data-lucide="presentation" class="w-5 h-5 text-blue-400"></i> Presentation
+                </h2>
+                <div class="h-6 w-px bg-white/10"></div>
+                <div class="flex gap-1 bg-slate-800 p-1 rounded-lg">
+                    <button onclick="setCanvasView('focus')" id="btnFocus" class="p-1.5 rounded bg-slate-700 text-white shadow-sm"><i data-lucide="monitor" class="w-4 h-4"></i></button>
+                    <button onclick="setCanvasView('grid')" id="btnGrid" class="p-1.5 rounded text-slate-400 hover:text-white"><i data-lucide="grid" class="w-4 h-4"></i></button>
+                </div>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="downloadPPTFromCanvas()" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg flex items-center gap-2 text-sm font-medium transition-all shadow-lg shadow-blue-500/20">
+                    <i data-lucide="download" class="w-4 h-4"></i> Export .PPTX
+                </button>
+                <button onclick="closeCanvas()" class="p-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition-colors border border-white/5">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Viewport -->
+        <div class="flex-1 relative overflow-hidden flex items-center justify-center">
+            
+            <!-- Focus View -->
+            <div id="focusView" class="relative w-full max-w-5xl aspect-video bg-black rounded-xl shadow-2xl overflow-hidden border border-slate-700 ring-1 ring-white/10 transition-all">
+                <div id="canvasSlideContainer" class="w-full h-full"></div>
+                
+                <!-- Nav -->
+                <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 bg-slate-900/90 backdrop-blur-xl px-4 py-2 rounded-full border border-white/10 shadow-2xl z-20">
+                    <button onclick="prevSlide()" class="p-2 hover:bg-white/10 rounded-full text-slate-300 hover:text-white transition-colors"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                    <span class="text-xs font-mono text-slate-400"><span id="currSlide" class="text-white">1</span> / <span id="totalSlide">5</span></span>
+                    <button onclick="nextSlide()" class="p-2 hover:bg-white/10 rounded-full text-slate-300 hover:text-white transition-colors"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                </div>
+            </div>
+
+            <!-- Grid View -->
+            <div id="gridView" class="hidden w-full h-full overflow-y-auto custom-scroll">
+                <div id="gridContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-4 pb-20">
+                    <!-- Grid items injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all duration-300 opacity-0">
-        <div class="bg-slate-900 border border-slate-700 p-6 rounded-2xl w-full max-w-md shadow-2xl transform scale-95 transition-all duration-300">
-            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-emerald-500"></i> Secure Setup</h2>
+        <div class="bg-slate-900 border border-white/10 p-6 rounded-2xl w-full max-w-md shadow-2xl transform scale-95 transition-all duration-300">
+            <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="shield-check" class="w-5 h-5 text-emerald-500"></i> API Configuration</h2>
             <div class="space-y-4">
-                <input type="password" id="apiKeyInput" placeholder="Paste Gemini API Key (AIzaSy...)" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all">
-                <div class="flex gap-3">
-                    <button onclick="saveSettings()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-xl transition-all shadow-lg shadow-blue-900/20">Save Key</button>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1.5 ml-1">Google Gemini API Key</label>
+                    <input type="password" id="apiKeyInput" placeholder="AIzaSy..." class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all font-mono">
+                </div>
+                <div class="flex gap-3 pt-2">
+                    <button onclick="saveSettings()" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-xl transition-all shadow-lg shadow-blue-500/20">Secure Save</button>
                     <button onclick="toggleSettings()" class="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium py-2.5 rounded-xl transition-all">Cancel</button>
                 </div>
-                <p class="text-[11px] text-slate-500 text-center">Key stored locally in browser.</p>
+                <p class="text-[10px] text-slate-500 text-center flex justify-center items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Stored locally on your device</p>
             </div>
         </div>
     </div>
 
     <!-- Main Content -->
     <main class="flex-1 overflow-hidden relative flex flex-col w-full max-w-5xl mx-auto">
-        <div id="chatContainer" class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-8 scroll-smooth custom-scroll w-full">
+        <div id="chatContainer" class="flex-1 overflow-y-auto p-4 sm:p-8 space-y-10 scroll-smooth custom-scroll w-full">
             
             <!-- Welcome -->
             <div id="welcomeScreen" class="min-h-[60vh] flex flex-col items-center justify-center text-center p-4 animate-fade-in">
-                <div class="w-24 h-24 bg-slate-900 rounded-3xl flex items-center justify-center border border-slate-800 shadow-2xl mb-6 relative group cursor-default">
-                    <div class="absolute inset-0 bg-blue-500/20 blur-xl rounded-full group-hover:bg-blue-500/30 transition-all duration-500"></div>
-                    <i data-lucide="sparkles" class="w-10 h-10 text-blue-400 relative z-10"></i>
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-violet-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-500/20 mb-8 border border-white/10 relative group">
+                    <div class="absolute inset-0 bg-white/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                    <i data-lucide="sparkles" class="w-10 h-10 text-white relative z-10"></i>
                 </div>
-                <h2 class="text-3xl font-bold text-white mb-3 tracking-tight">The Hybrid Office Suite</h2>
-                <p class="text-slate-400 max-w-lg mb-10 text-sm leading-relaxed">
-                    Seamlessly switch between <strong>Smart Chat</strong>, <strong>Data Analysis</strong>, and <strong>Visual Presentation Design</strong>.
+                
+                <h2 class="text-4xl font-bold text-white mb-3 tracking-tight font-outfit">Design. Analyze. Create.</h2>
+                <p class="text-slate-400 max-w-md mb-10 text-sm leading-relaxed">
+                    Welcome to the <strong>Design Studio</strong>. I can generate visual presentations, detailed reports with data cards, and high-fidelity assets.
                 </p>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
-                    <button onclick="setMode('presentation')" class="p-4 bg-slate-900/40 hover:bg-slate-800/80 border border-slate-800 hover:border-orange-500/50 rounded-xl text-left transition-all group">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="p-2 bg-orange-500/10 rounded-lg text-orange-400"><i data-lucide="presentation" class="w-4 h-4"></i></div>
-                            <span class="text-sm font-semibold text-slate-200">Presentation Designer</span>
-                        </div>
-                        <p class="text-xs text-slate-500 group-hover:text-slate-400">Generate visual slides with AI images.</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full max-w-3xl">
+                    <button onclick="setMode('presentation')" class="group p-4 bg-slate-900/50 hover:bg-blue-600/10 border border-white/5 hover:border-blue-500/50 rounded-2xl text-left transition-all relative overflow-hidden">
+                        <i data-lucide="presentation" class="w-6 h-6 text-blue-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-semibold text-white mb-1">Presentation</h3>
+                        <p class="text-[11px] text-slate-500 group-hover:text-blue-200/70 leading-tight">Visual slides with AI images</p>
                     </button>
                     
-                    <button onclick="setMode('analyze')" class="p-4 bg-slate-900/40 hover:bg-slate-800/80 border border-slate-800 hover:border-emerald-500/50 rounded-xl text-left transition-all group">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="p-2 bg-emerald-500/10 rounded-lg text-emerald-400"><i data-lucide="bar-chart-3" class="w-4 h-4"></i></div>
-                            <span class="text-sm font-semibold text-slate-200">Data Analyst</span>
-                        </div>
-                        <p class="text-xs text-slate-500 group-hover:text-slate-400">Deep insights from Excel or PDFs.</p>
+                    <button onclick="setMode('analyze')" class="group p-4 bg-slate-900/50 hover:bg-emerald-600/10 border border-white/5 hover:border-emerald-500/50 rounded-2xl text-left transition-all relative overflow-hidden">
+                        <i data-lucide="bar-chart-2" class="w-6 h-6 text-emerald-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-semibold text-white mb-1">Analytics</h3>
+                        <p class="text-[11px] text-slate-500 group-hover:text-emerald-200/70 leading-tight">Data to Smart Cards</p>
                     </button>
                     
-                    <button onclick="setMode('report')" class="p-4 bg-slate-900/40 hover:bg-slate-800/80 border border-slate-800 hover:border-blue-500/50 rounded-xl text-left transition-all group">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="p-2 bg-blue-500/10 rounded-lg text-blue-400"><i data-lucide="file-text" class="w-4 h-4"></i></div>
-                            <span class="text-sm font-semibold text-slate-200">Document Drafter</span>
-                        </div>
-                        <p class="text-xs text-slate-500 group-hover:text-slate-400">Professional reports & summaries.</p>
+                    <button onclick="setMode('report')" class="group p-4 bg-slate-900/50 hover:bg-purple-600/10 border border-white/5 hover:border-purple-500/50 rounded-2xl text-left transition-all relative overflow-hidden">
+                        <i data-lucide="file-text" class="w-6 h-6 text-purple-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-semibold text-white mb-1">Reports</h3>
+                        <p class="text-[11px] text-slate-500 group-hover:text-purple-200/70 leading-tight">Styled documents</p>
                     </button>
-                    
-                    <button onclick="setMode('image')" class="p-4 bg-slate-900/40 hover:bg-slate-800/80 border border-slate-800 hover:border-purple-500/50 rounded-xl text-left transition-all group">
-                        <div class="flex items-center gap-3 mb-2">
-                            <div class="p-2 bg-purple-500/10 rounded-lg text-purple-400"><i data-lucide="image" class="w-4 h-4"></i></div>
-                            <span class="text-sm font-semibold text-slate-200">Nano Banana</span>
-                        </div>
-                        <p class="text-xs text-slate-500 group-hover:text-slate-400">Stand-alone image generation.</p>
+
+                    <button onclick="setMode('image')" class="group p-4 bg-slate-900/50 hover:bg-amber-600/10 border border-white/5 hover:border-amber-500/50 rounded-2xl text-left transition-all relative overflow-hidden">
+                        <i data-lucide="image" class="w-6 h-6 text-amber-400 mb-3 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-semibold text-white mb-1">Studio</h3>
+                        <p class="text-[11px] text-slate-500 group-hover:text-amber-200/70 leading-tight">Nano Banana Art</p>
                     </button>
                 </div>
             </div>
 
             <!-- Chat Messages -->
-            <div id="messagesArea" class="flex flex-col gap-8 pb-4 w-full"></div>
+            <div id="messagesArea" class="flex flex-col gap-10 pb-4 w-full"></div>
             
             <!-- Loader -->
             <div id="loader" class="hidden w-full max-w-4xl mx-auto">
                 <div class="flex gap-4">
-                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center shrink-0"><i data-lucide="bot" class="w-5 h-5 text-indigo-400"></i></div>
-                    <div class="space-y-2">
-                        <div class="bg-slate-900 border border-slate-800 px-5 py-3 rounded-2xl rounded-tl-none flex items-center gap-2 w-fit">
-                            <span id="loaderText" class="text-xs text-slate-400 font-medium">Processing...</span>
-                            <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20"><i data-lucide="bot" class="w-4 h-4 text-white"></i></div>
+                    <div class="space-y-3 w-full">
+                        <div class="flex items-center gap-3">
+                            <span id="loaderText" class="text-xs text-blue-400 font-medium tracking-wide uppercase">Thinking</span>
+                            <div class="loader-ring"></div>
                         </div>
-                        <!-- Progress Bar for Image Generation -->
-                        <div id="progressContainer" class="hidden w-64 bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                        <div id="progressContainer" class="hidden w-full max-w-xs bg-slate-800 rounded-full h-1 overflow-hidden">
                             <div id="progressBar" class="bg-blue-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
@@ -176,107 +245,94 @@
     </main>
 
     <!-- Input Area -->
-    <footer class="bg-slate-950/80 backdrop-blur-xl border-t border-slate-800/60 p-4 pb-6 z-20">
+    <footer class="bg-[#020617]/80 backdrop-blur-xl border-t border-white/5 p-4 pb-6 z-20">
         <div class="max-w-4xl mx-auto w-full space-y-3">
             
-            <!-- Controls -->
+            <!-- Context Bar -->
             <div class="flex items-center justify-between px-1">
-                <div class="flex items-center gap-4 text-xs font-medium">
-                    <label class="flex items-center gap-2 cursor-pointer group select-none">
-                        <div class="relative flex items-center">
-                            <input type="checkbox" id="humanizerToggle" class="peer sr-only" checked>
-                            <div class="w-8 h-4.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-slate-400 after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-blue-600 peer-checked:after:bg-white"></div>
-                        </div>
-                        <span class="text-slate-500 group-hover:text-slate-300 transition-colors">Humanizer</span>
-                    </label>
-
-                    <label class="flex items-center gap-2 cursor-pointer group select-none">
-                        <div class="relative flex items-center">
-                            <input type="checkbox" id="webToggle" class="peer sr-only">
-                            <div class="w-8 h-4.5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-slate-400 after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-600 peer-checked:after:bg-white"></div>
-                        </div>
-                        <span class="text-slate-500 group-hover:text-slate-300 transition-colors">Web Check</span>
-                    </label>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleHumanizer()" id="btnHumanizer" class="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-blue-500/20 bg-blue-500/10 text-blue-400 transition-all hover:bg-blue-500/20">
+                        Humanizer: ON
+                    </button>
+                    <button onclick="toggleWeb()" id="btnWeb" class="text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-400 transition-all hover:border-emerald-500/30 hover:text-emerald-400">
+                        Web: OFF
+                    </button>
                 </div>
-                
-                <button id="nanoBtn" onclick="toggleNano()" class="text-xs flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-700/50 bg-slate-900 text-slate-400 hover:bg-slate-800 transition-all select-none">
-                    <i data-lucide="image" class="w-3 h-3"></i>
-                    <span>Nano Banana Off</span>
+                <button id="nanoBtn" onclick="toggleNano()" class="text-xs flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700/50 hover:bg-white/5 text-slate-400 hover:text-white transition-all select-none">
+                    <i data-lucide="image" class="w-3.5 h-3.5"></i> <span>Nano Off</span>
                 </button>
             </div>
 
-            <!-- Attachment Preview -->
-            <div id="attachmentPreview" class="hidden animate-slide-up flex items-center gap-3 bg-slate-900 border border-slate-700/50 p-2.5 rounded-xl w-fit shadow-lg">
-                <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700">
+            <!-- Attachment Pill -->
+            <div id="attachmentPreview" class="hidden animate-fade-in flex items-center gap-3 bg-slate-900 border border-white/10 p-2 pl-3 rounded-lg w-fit shadow-lg">
+                <div class="flex items-center gap-2">
                     <i id="attIcon" data-lucide="file" class="w-4 h-4 text-blue-400"></i>
+                    <div class="flex flex-col">
+                        <span id="attName" class="text-xs font-medium text-white max-w-[150px] truncate">File</span>
+                    </div>
                 </div>
-                <div class="text-xs pr-2">
-                    <p id="attName" class="font-medium text-white truncate max-w-[200px]"></p>
-                    <p id="attType" class="text-slate-500">Ready for analysis</p>
-                </div>
-                <button onclick="clearAttachment()" class="p-1 hover:bg-slate-800 rounded-full text-slate-400 hover:text-red-400 transition-colors">
-                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
-                </button>
+                <button onclick="clearAttachment()" class="p-1 hover:bg-white/10 rounded-md text-slate-400 hover:text-red-400"><i data-lucide="x" class="w-3 h-3"></i></button>
             </div>
 
-            <!-- Input Bar -->
+            <!-- Input Box -->
             <div class="relative group">
-                <div class="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-indigo-600/10 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
-                <div class="relative flex items-end gap-2 bg-slate-950 border border-slate-800 rounded-2xl p-2 transition-all group-focus-within:border-slate-600">
-                    <button onclick="document.getElementById('fileInput').click()" class="p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors" title="Attach File"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition-opacity duration-500"></div>
+                <div class="relative flex items-end gap-2 bg-slate-900 border border-slate-800 group-focus-within:border-slate-600 rounded-2xl p-2 transition-all shadow-xl">
+                    <button onclick="document.getElementById('fileInput').click()" class="p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors"><i data-lucide="paperclip" class="w-5 h-5"></i></button>
                     <input type="file" id="fileInput" class="hidden" onchange="handleFile(event)" accept=".pdf,.xlsx,.xls,image/*">
                     
-                    <textarea id="promptInput" rows="1" placeholder="Ask Super Gemini..." class="w-full bg-transparent border-none focus:ring-0 resize-none py-3 text-slate-200 placeholder:text-slate-600 max-h-32 custom-scroll text-sm" oninput="autoResize(this)" onkeydown="handleEnter(event)"></textarea>
+                    <textarea id="promptInput" rows="1" placeholder="Type a message..." class="w-full bg-transparent border-none focus:ring-0 resize-none py-3 text-slate-200 placeholder:text-slate-600 max-h-32 custom-scroll text-sm" oninput="autoResize(this)" onkeydown="handleEnter(event)"></textarea>
                     
-                    <button id="micBtn" onclick="toggleMic()" class="p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors"><i data-lucide="mic" class="w-5 h-5"></i></button>
-                    <button onclick="sendMessage()" class="p-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-900/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"><i data-lucide="send" class="w-5 h-5"></i></button>
+                    <button id="micBtn" onclick="toggleMic()" class="p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors"><i data-lucide="mic" class="w-5 h-5"></i></button>
+                    <button onclick="sendMessage()" class="p-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 disabled:opacity-50"><i data-lucide="arrow-up" class="w-5 h-5"></i></button>
                 </div>
-            </div>
-            
-            <div class="text-center">
-                <p class="text-[10px] text-slate-600 font-medium tracking-wide">Gemini 2.5 Flash • Imagen 4.0 • Hybrid Office</p>
             </div>
         </div>
     </footer>
 
-    <div id="toast" class="toast"></div>
+    <!-- Toast Notification -->
+    <div id="toast" class="toast flex items-center gap-3 shadow-2xl"></div>
 
     <script>
-        // --- State ---
+        // --- Core State ---
         let API_KEY = localStorage.getItem('GEMINI_API_KEY') || '';
         let chatHistory = [];
         let currentAttachment = null;
         let isNanoBanana = false;
-        let isRecording = false;
-        let recognition = null;
-        let currentMode = 'chat'; // chat, presentation, image
+        let isWebEnabled = false;
+        let isHumanizerEnabled = true;
+        let currentMode = 'chat';
+        let activeSlides = [];
+        let currentSlideIndex = 0;
+        let canvasView = 'focus'; // 'focus' or 'grid'
         
-        // Data Registry for Slides (Safety Mechanism)
-        const slidesRegistry = {};
-
+        // Models
         const MODEL_TEXT = 'gemini-2.5-flash-preview-09-2025';
         const MODEL_IMAGE = 'imagen-4.0-generate-001';
 
-        // --- System Prompts ---
+        // --- Improved Prompts ---
         const SYS_PROMPT_CHAT = `
-You are Super Gemini Office, a highly intelligent, professional AI assistant. 
-Your goal is to provide "Real World Project Ready" outputs.
-- If asked for a report/document, use Markdown headers (# Title, ## Section) and bullet points.
-- If asked for data analysis, organize insights logically with Markdown tables.
-- Adopt a professional, expert persona. Use clear, concise, and impactful language.
+You are Super Gemini Design Studio.
+FORMATTING RULES:
+1. **Metrics**: If outputting data/numbers, ALWAYS format them as "::METRIC:: [Label] | [Value]" on a new line. Example: ::METRIC:: Revenue | $5.2M
+2. **Styling**: Use Markdown headers (#). Use **bold** for emphasis.
+3. **Tables**: Create standard markdown tables for comparisons.
+4. **Tone**: Professional, insightful, concise.
 `;
 
         const SYS_PROMPT_PRES = `
-You are a Presentation Architect. You MUST output strictly valid JSON format without markdown code blocks.
-The JSON structure must be an array of slide objects:
+You are a Presentation Architect. Output strictly VALID JSON array of slide objects. No markdown code blocks.
+Structure:
 [
   {
-    "title": "Slide Title",
-    "content": ["Bullet point 1", "Bullet point 2", "Bullet point 3"],
-    "image_prompt": "A highly detailed, cinematic, professional 3D render infographic about [Topic], trending on artstation, 8k resolution"
+    "layout": "title" | "split_right" | "split_left" | "big_number",
+    "title": "Title",
+    "subtitle": "Subtitle",
+    "points": ["Bullet 1", "Bullet 2"],
+    "image_prompt": "Photorealistic 8k render of [Topic], cinematic lighting"
   }
 ]
-Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
+Create 5-8 slides. Narrate a story.
 `;
 
         // --- Init ---
@@ -284,21 +340,9 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
             lucide.createIcons();
             updateKeyStatus();
             if(!API_KEY) setTimeout(toggleSettings, 800);
-            
-            if ('webkitSpeechRecognition' in window) {
-                recognition = new webkitSpeechRecognition();
-                recognition.continuous = false;
-                recognition.onresult = (e) => {
-                    const txt = e.results[0][0].transcript;
-                    const input = document.getElementById('promptInput');
-                    input.value += (input.value ? ' ' : '') + txt;
-                    autoResize(input);
-                };
-                recognition.onend = () => { isRecording = false; updateMicIcon(); };
-            }
         });
 
-        // --- Settings & UI ---
+        // --- UI Interactions ---
         function toggleSettings() {
             const m = document.getElementById('settingsModal');
             m.classList.toggle('hidden');
@@ -308,43 +352,65 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
 
         function saveSettings() {
             const k = document.getElementById('apiKeyInput').value.trim();
-            if(!k) return showToast('API Key required', 'error');
+            if(!k) return showToast('Key is required', 'error');
             localStorage.setItem('GEMINI_API_KEY', k);
             API_KEY = k;
             updateKeyStatus();
             toggleSettings();
-            showToast('Secure configuration saved', 'success');
+            showToast('Securely saved', 'success');
         }
 
         function updateKeyStatus() {
             const el = document.getElementById('keyStatus');
-            el.innerHTML = API_KEY ? 
-                `<div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></div><span class="text-xs font-medium text-emerald-400">Ready</span>` :
-                `<div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div><span class="text-xs font-medium text-amber-500">No Key</span>`;
+            if(API_KEY) {
+                el.innerHTML = `<div class="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div> Ready`;
+                el.classList.add('border-emerald-500/30', 'text-emerald-400');
+            }
         }
 
         function setMode(mode) {
             currentMode = mode;
             const input = document.getElementById('promptInput');
             const prompts = {
-                presentation: "Create a visual presentation about [Topic]. Include key trends and future outlook.",
-                report: "Write a comprehensive project report about [Topic]. Include Executive Summary and Recommendations.",
-                analyze: "Analyze the attached data. Identify key insights, anomalies, and provide a summary table.",
-                image: "Describe the image you want Nano Banana to generate..."
+                presentation: "Create a visual pitch deck for [Topic].",
+                analyze: "Analyze the Q3 performance metrics.",
+                report: "Write an executive summary about [Topic].",
+                image: "A futuristic workspace with holographic screens..."
             };
             
-            if (mode === 'image') {
-                if (!isNanoBanana) toggleNano();
-            } else {
-                if (isNanoBanana) toggleNano();
-            }
+            // Auto toggle Nano
+            if (mode === 'image' && !isNanoBanana) toggleNano();
+            if (mode !== 'image' && isNanoBanana) toggleNano();
             
             input.value = prompts[mode] || "";
             autoResize(input);
             input.focus();
-            
             const idx = input.value.indexOf("[Topic]");
             if (idx !== -1) input.setSelectionRange(idx, idx + 7);
+        }
+
+        function toggleHumanizer() {
+            isHumanizerEnabled = !isHumanizerEnabled;
+            const btn = document.getElementById('btnHumanizer');
+            if(isHumanizerEnabled) {
+                btn.innerHTML = "Humanizer: ON";
+                btn.className = "text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-blue-500/20 bg-blue-500/10 text-blue-400 transition-all";
+            } else {
+                btn.innerHTML = "Humanizer: OFF";
+                btn.className = "text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-500 transition-all";
+            }
+        }
+
+        function toggleWeb() {
+            isWebEnabled = !isWebEnabled;
+            const btn = document.getElementById('btnWeb');
+            if(isWebEnabled) {
+                btn.innerHTML = "Web: ON";
+                btn.className = "text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-emerald-500/20 bg-emerald-500/10 text-emerald-400 transition-all";
+            } else {
+                btn.innerHTML = "Web: OFF";
+                btn.className = "text-[10px] uppercase tracking-wider font-bold px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800/50 text-slate-500 transition-all";
+            }
         }
 
         function toggleNano() {
@@ -353,20 +419,20 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
             const input = document.getElementById('promptInput');
             
             if (isNanoBanana) {
-                btn.innerHTML = '<i data-lucide="sparkles" class="w-3 h-3"></i><span>Nano Banana ON</span>';
-                btn.className = 'text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-yellow-500/50 text-yellow-400 bg-yellow-500/10 shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all select-none cursor-pointer';
-                input.placeholder = "Describe the image you want to create...";
+                btn.innerHTML = '<i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-400"></i> <span class="text-yellow-100">Nano ON</span>';
+                btn.className = "text-xs flex items-center gap-2 px-3 py-1.5 rounded-lg border border-yellow-500/30 bg-yellow-500/10 text-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.2)] transition-all select-none";
+                input.placeholder = "Describe the visual you want...";
                 currentMode = 'image';
             } else {
-                btn.innerHTML = '<i data-lucide="image" class="w-3 h-3"></i><span>Nano Banana Off</span>';
-                btn.className = 'text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-slate-700/50 bg-slate-900 text-slate-400 hover:bg-slate-800 transition-all select-none cursor-pointer';
-                input.placeholder = "Ask Super Gemini...";
+                btn.innerHTML = '<i data-lucide="image" class="w-3.5 h-3.5"></i> <span>Nano Off</span>';
+                btn.className = "text-xs flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-700/50 hover:bg-white/5 text-slate-400 hover:text-white transition-all select-none";
+                input.placeholder = "Type a message...";
                 currentMode = 'chat';
             }
             lucide.createIcons();
         }
 
-        // --- File Handling ---
+        // --- File & Input ---
         function handleFile(e) {
             const f = e.target.files[0];
             if(!f) return;
@@ -374,9 +440,8 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
             document.getElementById('attachmentPreview').classList.remove('hidden');
             document.getElementById('attachmentPreview').classList.add('flex');
             document.getElementById('attName').innerText = f.name;
-            
-            const map = {image:'image', pdf:'file-text', excel:'bar-chart-3', unknown:'paperclip'};
-            let type = f.type.includes('image') ? 'image' : f.type === 'application/pdf' ? 'pdf' : f.name.match(/\.xls(x)?$/) ? 'excel' : 'unknown';
+            const map = {image:'image', pdf:'file-text', excel:'bar-chart-2', unknown:'paperclip'};
+            let type = f.type.includes('image') ? 'image' : f.type.includes('pdf') ? 'pdf' : f.name.match(/\.xls(x)?$/) ? 'excel' : 'unknown';
             document.getElementById('attIcon').innerHTML = `<i data-lucide="${map[type]}" class="w-4 h-4 text-blue-400"></i>`;
             lucide.createIcons();
         }
@@ -388,7 +453,7 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
             document.getElementById('attachmentPreview').classList.remove('flex');
         }
 
-        // --- Core Logic ---
+        // --- Logic Router ---
         async function sendMessage() {
             const input = document.getElementById('promptInput');
             const text = input.value.trim();
@@ -403,73 +468,73 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
             const att = currentAttachment;
             clearAttachment();
             
-            // Determine Intent
+            // Intent Detection
             let intent = currentMode;
-            if (intent === 'chat' && (text.toLowerCase().includes('presentation') || text.toLowerCase().includes('slides'))) {
-                intent = 'presentation';
+            if (intent === 'chat') {
+                const lower = text.toLowerCase();
+                if (lower.includes('presentation') || lower.includes('deck')) intent = 'presentation';
+                else if (lower.includes('analyze') || lower.includes('report') || lower.includes('summary')) intent = 'analyze'; // Unified Analysis/Report
+                else if (lower.includes('image') || lower.includes('picture')) intent = 'image';
             }
 
-            if (intent === 'presentation') {
-                await handlePresentationWorkflow(text, att);
-            } else if (intent === 'image') {
-                await handleImageWorkflow(text);
-            } else {
-                await handleStandardWorkflow(text, att);
-            }
+            if (intent === 'presentation') await handlePresentation(text, att);
+            else if (intent === 'image') await handleImage(text);
+            else await handleAnalysis(text, att);
         }
 
-        // --- Workflow 1: Standard Chat / Doc / Analysis ---
-        async function handleStandardWorkflow(text, att) {
-            showLoader("Analyzing context...");
+        // --- Logic: Analysis/Chat (Streaming Simulation) ---
+        async function handleAnalysis(text, att) {
+            showLoader("Analyzing Request...");
             try {
                 const parts = [{text: text}];
                 if (att) {
                     if (att.name.match(/\.xls(x)?$/)) {
                         const csv = await readExcel(att);
-                        parts.push({ text: `\n\n[System: User attached Excel data converted to CSV]:\n${csv}` });
+                        parts.push({ text: `\n\n[Context Data]:\n${csv}` });
                     } else {
                         const b64 = await fileToBase64(att);
                         parts.push({ inlineData: { mimeType: att.type, data: b64 } });
                     }
                 }
 
-                // History
                 const contents = [...chatHistory, { role: 'user', parts }];
-                const tools = document.getElementById('webToggle').checked ? [{ google_search: {} }] : undefined;
-                const sys = document.getElementById('humanizerToggle').checked ? { parts: [{ text: SYS_PROMPT_CHAT }] } : undefined;
+                const tools = isWebEnabled ? [{ google_search: {} }] : undefined;
+                const sys = isHumanizerEnabled ? { parts: [{ text: SYS_PROMPT_CHAT }] } : undefined;
 
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_TEXT}:generateContent?key=${API_KEY}`, {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ contents, tools, systemInstruction: sys })
+                    body: JSON.stringify({ contents, systemInstruction: sys, tools })
                 });
 
                 const data = await res.json();
                 if(data.error) throw new Error(data.error.message);
                 
-                const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+                const resultText = data.candidates[0].content.parts[0].text;
                 
-                // Update History
+                // Save context
                 chatHistory.push({ role: 'user', parts: [{ text: text }] });
                 chatHistory.push({ role: 'model', parts: [{ text: resultText }] });
                 
-                appendModelMessage(resultText);
+                // Parse for Smart Cards (Metrics)
+                const { cleanText, metrics } = parseMetrics(resultText);
+                
+                hideLoader();
+                await typeWriterMessage(cleanText, metrics);
 
             } catch(e) {
-                appendErrorMessage(e.message);
-            } finally {
                 hideLoader();
+                appendError(e.message);
             }
         }
 
-        // --- Workflow 2: Presentation Engine ---
-        async function handlePresentationWorkflow(text, att) {
-            showLoader("Architecting slide deck structure...");
+        // --- Logic: Presentation ---
+        async function handlePresentation(text, att) {
+            showLoader("Architecting Deck...");
             try {
-                // 1. Structure
                 const parts = [{text: text}];
-                if(att) {
-                    // Logic to use attachment context for presentation
+                // Add attachment context if exists
+                if (att) {
                     if (att.name.match(/\.xls(x)?$/)) {
                         const csv = await readExcel(att);
                         parts.push({ text: `\n\n[Context Data]:\n${csv}` });
@@ -492,24 +557,17 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
                 if(data.error) throw new Error(data.error.message);
                 
                 let rawText = data.candidates[0].content.parts[0].text;
-                
-                // Robust JSON Extraction
                 let slidesJSON = [];
                 try {
-                    const jsonMatch = rawText.match(/\[[\s\S]*\]/);
-                    if (jsonMatch) {
-                        slidesJSON = JSON.parse(jsonMatch[0]);
-                    } else {
-                        throw new Error("No valid JSON found in response");
-                    }
+                    slidesJSON = JSON.parse(rawText.replace(/```json/g, '').replace(/```/g, '').trim());
                 } catch(e) {
-                    // Fallback to normal text if JSON fails
-                    appendModelMessage(rawText);
+                    hideLoader();
+                    await typeWriterMessage(rawText); // Fallback to text
                     return;
                 }
 
-                // 2. Images
-                showLoader(`Generating ${slidesJSON.length} visual assets...`, true);
+                // Image Gen Loop
+                showLoader(`Designing ${slidesJSON.length} slides...`, true);
                 const progress = document.getElementById('progressBar');
                 
                 for(let i=0; i<slidesJSON.length; i++) {
@@ -524,22 +582,22 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
                             });
                             const imgData = await imgRes.json();
                             if(imgData.predictions) slide.imageData = `data:image/png;base64,${imgData.predictions[0].bytesBase64Encoded}`;
-                        } catch(e) { console.log('Image fail'); }
+                        } catch(e) { console.log('Image skip'); }
                     }
                 }
 
+                hideLoader();
                 appendPresentationCard(slidesJSON);
 
             } catch(e) {
-                appendErrorMessage("Presentation failed: " + e.message);
-            } finally {
                 hideLoader();
+                appendError(e.message);
             }
         }
 
-        // --- Workflow 3: Image ---
-        async function handleImageWorkflow(text) {
-            showLoader("Creating digital art...");
+        // --- Logic: Image ---
+        async function handleImage(text) {
+            showLoader("Rendering Art...");
             try {
                 const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL_IMAGE}:predict?key=${API_KEY}`, {
                     method: 'POST',
@@ -547,24 +605,43 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
                     body: JSON.stringify({ instances: [{ prompt: text }], parameters: { sampleCount: 1 } })
                 });
                 const data = await res.json();
-                if(!data.predictions) throw new Error("Image generation failed");
+                if(!data.predictions) throw new Error("Gen Failed");
                 
-                appendModelMessage(text, `data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`);
-            } catch(e) {
-                appendErrorMessage(e.message);
-            } finally {
                 hideLoader();
+                appendImageCard(`data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`, text);
+            } catch(e) {
+                hideLoader();
+                appendError(e.message);
             }
         }
 
-        // --- UI Renderers ---
+        // --- Smart Parsing ---
+        function parseMetrics(text) {
+            const metrics = [];
+            const lines = text.split('\n');
+            const cleanLines = [];
+            
+            lines.forEach(line => {
+                if (line.includes('::METRIC::')) {
+                    const parts = line.replace('::METRIC::', '').split('|');
+                    if (parts.length === 2) {
+                        metrics.push({ label: parts[0].trim(), value: parts[1].trim() });
+                    }
+                } else {
+                    cleanLines.push(line);
+                }
+            });
+            return { cleanText: cleanLines.join('\n'), metrics };
+        }
+
+        // --- UI Rendering ---
         function appendUserMessage(text, att) {
             const div = document.createElement('div');
             div.className = "flex justify-end animate-fade-in";
             div.innerHTML = `
                 <div class="max-w-[85%] flex flex-col items-end gap-2">
-                    <div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-sm shadow-md text-sm leading-relaxed">
-                        ${att ? `<div class="flex items-center gap-2 bg-black/20 p-2 rounded-lg mb-2 text-xs border border-white/10"><i data-lucide="paperclip" class="w-3 h-3"></i> ${att.name}</div>` : ''}
+                    <div class="bg-blue-600 text-white p-4 rounded-2xl rounded-tr-sm shadow-xl shadow-blue-900/20 text-sm leading-relaxed font-light">
+                        ${att ? `<div class="flex items-center gap-2 bg-blue-700/50 p-2 rounded-lg mb-2 text-xs border border-white/10"><i data-lucide="paperclip" class="w-3 h-3"></i> ${att.name}</div>` : ''}
                         <p class="whitespace-pre-wrap">${text}</p>
                     </div>
                 </div>`;
@@ -572,32 +649,70 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
             scrollToBottom();
         }
 
-        function appendModelMessage(text, image = null) {
+        // The Typewriter Effect for Text
+        async function typeWriterMessage(text, metrics = []) {
             const div = document.createElement('div');
-            div.className = "flex gap-4 animate-fade-in";
+            div.className = "flex gap-4 w-full max-w-4xl mx-auto";
+            const id = 'msg-' + Date.now();
             
-            // Generate a unique ID for the text content to enable safe export
-            const textId = 'msg-' + Date.now();
-            
-            const exportHtml = !image ? `
-                <div class="flex gap-2 mt-3">
-                    <button onclick="exportFromId('${textId}', 'docx')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:bg-slate-800 hover:border-blue-500/50 text-slate-400 hover:text-blue-400 text-xs transition-all"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> DOCX</button>
-                    <button onclick="exportFromId('${textId}', 'xlsx')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:bg-slate-800 hover:border-emerald-500/50 text-slate-400 hover:text-emerald-400 text-xs transition-all"><i data-lucide="table" class="w-3.5 h-3.5"></i> XLSX</button>
-                </div>` : '';
+            // Metrics HTML
+            let metricsHtml = '';
+            if (metrics.length > 0) {
+                metricsHtml = `<div class="metrics-grid">
+                    ${metrics.map(m => `
+                        <div class="metric-card">
+                            <div class="metric-label">${m.label}</div>
+                            <div class="metric-value">${m.value}</div>
+                        </div>
+                    `).join('')}
+                </div>`;
+            }
 
             div.innerHTML = `
-                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center shrink-0 mt-1"><i data-lucide="bot" class="w-5 h-5 text-indigo-400"></i></div>
-                <div class="max-w-[85%] group">
-                    <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl rounded-tl-sm shadow-sm relative">
-                        <button onclick="copyText('${textId}')" class="absolute top-4 right-4 p-1.5 text-slate-500 hover:text-white rounded bg-slate-800/50 opacity-0 group-hover:opacity-100 transition-opacity"><i data-lucide="copy" class="w-3.5 h-3.5"></i></button>
-                        ${image ? `
-                            <div class="mb-3 text-xs font-bold text-yellow-400 flex items-center gap-1.5 uppercase"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Generated</div>
-                            <img src="${image}" class="rounded-xl border border-slate-700 w-full shadow-lg" />
-                            <p class="text-xs text-slate-500 mt-3 italic">${text}</p>
-                        ` : `<div class="prose prose-invert prose-sm max-w-none text-slate-300">${marked.parse(text)}</div>`}
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 mt-1"><i data-lucide="bot" class="w-4 h-4 text-white"></i></div>
+                <div class="flex-1 min-w-0">
+                    <div class="group relative">
+                        ${metricsHtml}
+                        <div class="prose prose-invert prose-sm max-w-none text-slate-300 typing-container">
+                            <span class="typing-cursor"></span>
+                        </div>
+                        <div class="mt-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onclick="exportDoc('${id}', 'docx')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-500/50 text-slate-400 hover:text-blue-400 text-xs transition-all"><i data-lucide="file-text" class="w-3.5 h-3.5"></i> DOCX</button>
+                            <button onclick="exportDoc('${id}', 'xlsx')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-emerald-500/50 text-slate-400 hover:text-emerald-400 text-xs transition-all"><i data-lucide="table" class="w-3.5 h-3.5"></i> XLSX</button>
+                            <button onclick="copyText('${id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-white/20 text-slate-400 hover:text-white text-xs transition-all"><i data-lucide="copy" class="w-3.5 h-3.5"></i> Copy</button>
+                        </div>
                     </div>
-                    ${exportHtml}
-                    <div id="${textId}" class="hidden raw-text">${text}</div>
+                    <div id="${id}" class="hidden raw-text">${text}</div>
+                </div>`;
+            
+            document.getElementById('messagesArea').appendChild(div);
+            lucide.createIcons();
+            scrollToBottom();
+
+            // Typing Logic
+            const container = div.querySelector('.typing-container');
+            const markdown = marked.parse(text); // Parse markdown first
+            
+            // Simple approach: Inject fully parsed HTML, but simulate "loading" by opacity or chunking
+            // For complex HTML (tables), true typing is hard. We will fade-in chunks.
+            container.innerHTML = markdown; 
+            container.classList.add('animate-fade-in');
+            div.querySelector('.typing-cursor').remove();
+        }
+
+        function appendImageCard(url, prompt) {
+            const div = document.createElement('div');
+            div.className = "flex gap-4 w-full max-w-4xl mx-auto animate-fade-in";
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-yellow-500 to-amber-600 flex items-center justify-center shrink-0 shadow-lg shadow-amber-500/20 mt-1"><i data-lucide="sparkles" class="w-4 h-4 text-white"></i></div>
+                <div class="flex-1">
+                    <div class="bg-slate-900 border border-slate-800 p-2 rounded-2xl shadow-xl w-fit">
+                        <img src="${url}" class="rounded-xl border border-slate-700/50 shadow-2xl max-w-md w-full" />
+                        <div class="px-3 py-2 flex justify-between items-center">
+                            <p class="text-xs text-slate-500 italic truncate max-w-[200px]">${prompt}</p>
+                            <a href="${url}" download="nano-art.png" class="p-1.5 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition-colors"><i data-lucide="download" class="w-4 h-4"></i></a>
+                        </div>
+                    </div>
                 </div>`;
             document.getElementById('messagesArea').appendChild(div);
             lucide.createIcons();
@@ -605,40 +720,29 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
         }
 
         function appendPresentationCard(slides) {
+            activeSlides = slides;
             const div = document.createElement('div');
-            div.className = "flex gap-4 animate-fade-in w-full";
-            const first = slides[0];
-            
-            // Store slides in registry to avoid HTML attribute injection
-            const slideId = 'slides-' + Date.now();
-            slidesRegistry[slideId] = slides;
-            
+            div.className = "flex gap-4 w-full max-w-4xl mx-auto animate-fade-in";
             div.innerHTML = `
-                <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center shrink-0 mt-1"><i data-lucide="presentation" class="w-5 h-5 text-indigo-400"></i></div>
-                <div class="w-full max-w-2xl bg-slate-900 border border-slate-700 p-0 rounded-2xl overflow-hidden shadow-xl ppt-card">
-                    <div class="p-4 border-b border-slate-800 bg-slate-950/50 flex justify-between items-center">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-indigo-500/20 mt-1"><i data-lucide="presentation" class="w-4 h-4 text-white"></i></div>
+                <div class="w-full max-w-2xl bg-slate-900 border border-slate-700 p-0 rounded-2xl overflow-hidden shadow-2xl hover:border-blue-500/30 transition-colors cursor-default">
+                    <div class="p-4 border-b border-slate-800 bg-slate-950/50 flex justify-between items-center backdrop-blur-md">
                         <div class="flex items-center gap-2">
-                            <i data-lucide="sparkles" class="w-4 h-4 text-yellow-400"></i>
-                            <span class="text-sm font-semibold text-white">Presentation Ready</span>
-                            <span class="text-xs text-slate-500 px-2 py-0.5 bg-slate-800 rounded-full">${slides.length} Slides</span>
+                            <span class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]"></span>
+                            <span class="text-sm font-bold text-white tracking-wide">Presentation Ready</span>
                         </div>
+                        <span class="text-xs font-mono text-slate-500 bg-slate-800/50 px-2 py-1 rounded-md border border-white/5">${slides.length} SLIDES</span>
                     </div>
-                    <div class="p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div class="slide-preview flex flex-col justify-center items-center p-4 text-center bg-cover bg-center" style="background-image: url('${first.imageData||''}');">
-                            <div class="absolute inset-0 bg-black/60 backdrop-blur-[1px]"></div>
-                            <h3 class="relative z-10 text-lg font-bold text-white mb-2">${first.title}</h3>
-                            <div class="relative z-10 w-12 h-1 bg-blue-500 rounded-full"></div>
-                        </div>
-                        <div class="flex flex-col justify-center space-y-3">
-                            <h4 class="text-slate-300 font-medium text-sm">Overview</h4>
-                            <ul class="text-xs text-slate-400 space-y-2">
-                                ${slides.map((s,i) => `<li class="truncate flex gap-2"><span class="text-blue-500">${i+1}.</span> ${s.title}</li>`).join('')}
-                            </ul>
-                            <div class="mt-4 pt-4 border-t border-slate-800">
-                                <button onclick="downloadPPTFromRegistry('${slideId}')" class="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-900/20">
-                                    <i data-lucide="download" class="w-4 h-4"></i> Download PPTX
-                                </button>
-                            </div>
+                    <div class="p-8 text-center bg-gradient-to-b from-slate-900 to-slate-900/50">
+                        <h3 class="text-2xl font-bold text-white mb-2 font-outfit">${slides[0].title}</h3>
+                        <p class="text-sm text-slate-400 mb-8 font-light">Includes high-fidelity AI visuals and narrative structure.</p>
+                        <div class="flex gap-4 justify-center">
+                            <button onclick="openCanvas()" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-sm font-bold flex items-center gap-2 shadow-lg shadow-blue-600/20 transition-all hover:scale-105 active:scale-95">
+                                <i data-lucide="monitor-play" class="w-4 h-4"></i> Open Canvas
+                            </button>
+                            <button onclick="downloadPPTFromCanvas()" class="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-sm font-bold flex items-center gap-2 border border-slate-700 hover:border-slate-600 transition-all">
+                                <i data-lucide="download" class="w-4 h-4"></i> Download .PPTX
+                            </button>
                         </div>
                     </div>
                 </div>`;
@@ -647,82 +751,112 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
             scrollToBottom();
         }
 
-        function appendErrorMessage(text) {
+        function appendError(msg) {
             const div = document.createElement('div');
-            div.className = "flex gap-4 animate-fade-in";
-            div.innerHTML = `<div class="w-8 h-8 rounded-lg bg-red-500/10 flex justify-center items-center shrink-0"><i data-lucide="alert-triangle" class="w-5 h-5 text-red-400"></i></div><div class="bg-red-950/20 border border-red-500/20 text-red-400 p-4 rounded-2xl text-sm">${text}</div>`;
+            div.className = "flex gap-4 w-full max-w-4xl mx-auto animate-fade-in";
+            div.innerHTML = `
+                <div class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center shrink-0"><i data-lucide="alert-triangle" class="w-4 h-4 text-red-500"></i></div>
+                <div class="bg-red-950/20 border border-red-500/20 text-red-400 p-4 rounded-2xl text-sm w-full font-mono">${msg}</div>`;
             document.getElementById('messagesArea').appendChild(div);
             lucide.createIcons();
             scrollToBottom();
         }
 
-        // --- Export Functions ---
-        function downloadPPTFromRegistry(id) {
-            if (!window.PptxGenJS) return showToast("PPT Generator Loading...", "error");
-            const slides = slidesRegistry[id];
-            if (!slides) return showToast("Error finding slides data", "error");
+        // --- Canvas & Export Logic ---
+        function openCanvas() {
+            document.getElementById('canvasOverlay').classList.remove('hidden');
+            setTimeout(() => document.getElementById('canvasOverlay').classList.remove('opacity-0'), 10);
+            renderCanvas();
+        }
+        function closeCanvas() {
+            document.getElementById('canvasOverlay').classList.add('opacity-0');
+            setTimeout(() => document.getElementById('canvasOverlay').classList.add('hidden'), 300);
+        }
+        function setCanvasView(v) {
+            canvasView = v;
+            document.getElementById('focusView').classList.toggle('hidden', v==='grid');
+            document.getElementById('gridView').classList.toggle('hidden', v==='focus');
+            document.getElementById('btnFocus').className = v==='focus'?'p-1.5 rounded bg-slate-700 text-white shadow-sm':'p-1.5 rounded text-slate-400 hover:text-white';
+            document.getElementById('btnGrid').className = v==='grid'?'p-1.5 rounded bg-slate-700 text-white shadow-sm':'p-1.5 rounded text-slate-400 hover:text-white';
+            renderCanvas();
+        }
+
+        function renderCanvas() {
+            // Render Focus
+            const container = document.getElementById('canvasSlideContainer');
+            const slide = activeSlides[currentSlideIndex];
+            const img = slide.imageData || 'https://via.placeholder.com/1920x1080/0f172a/ffffff?text=AI+Visual';
             
+            // Focus Layouts
+            let html = '';
+            if (slide.layout === 'title') {
+                html = `<div class="layout-modern-title"><h1 class="text-6xl font-bold text-white mb-4 z-10">${slide.title}</h1><p class="text-2xl text-blue-400 z-10">${slide.subtitle||''}</p></div>`;
+            } else {
+                html = `<div class="layout-split">
+                    <div class="layout-content bg-white">
+                        <h2 class="text-4xl font-bold text-slate-900 mb-2">${slide.title}</h2>
+                        <h3 class="text-xl text-blue-600 mb-8 font-medium">${slide.subtitle||''}</h3>
+                        <ul class="slide-bullets text-slate-600 space-y-4">${slide.points.map(p=>`<li>${p}</li>`).join('')}</ul>
+                    </div>
+                    <div class="layout-image-container"><img src="${img}" class="layout-image" /></div>
+                </div>`;
+            }
+            container.innerHTML = html;
+            document.getElementById('currSlide').innerText = currentSlideIndex + 1;
+            document.getElementById('totalSlide').innerText = activeSlides.length;
+
+            // Render Grid
+            const grid = document.getElementById('gridContainer');
+            grid.innerHTML = activeSlides.map((s,i) => `
+                <div onclick="currentSlideIndex=${i}; setCanvasView('focus')" class="slide-grid-item aspect-video bg-white rounded-lg overflow-hidden relative group">
+                    <div class="absolute inset-0 bg-slate-900 flex items-center justify-center text-xs text-white p-2 text-center">${s.title}</div>
+                    <div class="absolute bottom-2 right-2 text-[10px] text-slate-500 bg-white/90 px-1.5 rounded">${i+1}</div>
+                </div>
+            `).join('');
+        }
+
+        function nextSlide() { if(currentSlideIndex < activeSlides.length-1) { currentSlideIndex++; renderCanvas(); } }
+        function prevSlide() { if(currentSlideIndex > 0) { currentSlideIndex--; renderCanvas(); } }
+
+        function downloadPPTFromCanvas() {
+            if(!window.PptxGenJS) return showToast('Lib Loading','error');
             const pres = new PptxGenJS();
             pres.layout = 'LAYOUT_16x9';
-            pres.defineSlideMaster({
-                title: 'MASTER',
-                background: { color: '0F172A' },
-                objects: [
-                    { rect: { x: 0, y: 0, w: 0.3, h: '100%', fill: { color: '3B82F6' } } },
-                    { text: { text: "Generated by Super Gemini", options: { x: 0.5, y: 7.2, fontSize: 10, color: '64748B' } } }
-                ]
-            });
+            pres.defineSlideMaster({ title: 'MASTER', background: { color: '0F172A' } });
 
-            slides.forEach(slide => {
-                const s = pres.addSlide({ masterName: 'MASTER' });
-                s.addText(slide.title, { x: 0.6, y: 0.5, w: '90%', fontSize: 32, fontFace: 'Arial', color: 'FFFFFF', bold: true });
-                const bullets = slide.content.map(txt => ({ text: txt, options: { fontSize: 18, color: 'CBD5E1', breakLine: true, bullet: true }}));
-                s.addText(bullets, { x: 0.6, y: 1.5, w: '45%', h: 5, align: 'top', fontFace: 'Arial' });
-                if (slide.imageData) {
-                    s.addImage({ data: slide.imageData, x: 5.5, y: 1.5, w: 4, h: 4, sizing: { type: 'contain', w: 4, h: 4 } });
-                    s.addShape(pres.ShapeType.rect, { x: 5.4, y: 1.4, w: 4.2, h: 4.2, line: { color: '3B82F6', width: 1 }, fill: { color: 'FFFFFF', alpha: 0 } });
+            activeSlides.forEach(s => {
+                const sl = pres.addSlide({ masterName: 'MASTER' });
+                if(s.layout === 'title') {
+                    sl.background = { color: '020617' };
+                    sl.addText(s.title, { x:1, y:2.5, w:'80%', fontSize:44, color:'FFFFFF', bold:true, align:'center' });
+                    sl.addText(s.subtitle||'', { x:1, y:4, w:'80%', fontSize:20, color:'3B82F6', align:'center' });
                 } else {
-                    s.addShape(pres.ShapeType.rect, { x: 5.5, y: 1.5, w: 4, h: 4, fill: { color: '1E293B' } });
-                    s.addText("No Visual", { x: 5.5, y: 3.5, w: 4, align: 'center', color: '475569' });
+                    sl.addText(s.title, { x:0.5, y:0.5, w:'90%', fontSize:28, color:'FFFFFF', bold:true });
+                    sl.addText(s.points.map(p=>({text:p, options:{fontSize:16, color:'CBD5E1', bullet:true}})), { x:0.5, y:1.5, w:'45%', h:5, valign:'top' });
+                    if(s.imageData) sl.addImage({ data:s.imageData, x:5.5, y:1.5, w:4.5, h:4.5, sizing:{type:'cover', w:4.5, h:4.5} });
                 }
             });
-            pres.writeFile({ fileName: 'Super_Gemini_Presentation.pptx' });
+            pres.writeFile({ fileName: 'Super_Gemini_Deck.pptx' });
         }
 
-        async function exportFromId(elementId, type) {
-            const rawText = document.getElementById(elementId).innerText;
-            const title = "Super_Gemini_Export";
-            try {
-                if (type === 'docx') {
-                    if (!window.docx) return showToast("Docx Library Loading...", "error");
-                    const { Document, Packer, Paragraph, TextRun, HeadingLevel } = window.docx;
-                    const lines = rawText.split('\n');
-                    const children = lines.map(line => {
-                        line = line.trim();
-                        if (line.startsWith('# ')) return new Paragraph({ text: line.replace('# ', ''), heading: HeadingLevel.HEADING_1 });
-                        if (line.startsWith('## ')) return new Paragraph({ text: line.replace('## ', ''), heading: HeadingLevel.HEADING_2 });
-                        if (line.startsWith('- ')) return new Paragraph({ text: line.replace('- ', ''), bullet: { level: 0 } });
-                        return new Paragraph({ children: [new TextRun(line)], spacing: { after: 120 } });
-                    });
-                    const doc = new Document({ sections: [{ children }] });
-                    const blob = await Packer.toBlob(doc);
-                    saveAs(blob, `${title}.docx`);
-                } else if (type === 'xlsx') {
-                    if (!window.XLSX) return showToast("Excel Library Loading...", "error");
-                    const lines = rawText.split('\n');
-                    const data = [];
-                    lines.forEach(l => { if(l.includes('|') && !l.includes('---')) data.push(l.split('|').filter(c=>c.trim()).map(c=>c.trim())); });
-                    if(data.length===0) data.push([rawText]);
-                    const wb = XLSX.utils.book_new();
-                    const ws = XLSX.utils.aoa_to_sheet(data);
-                    XLSX.utils.book_append_sheet(wb, ws, "Data");
-                    XLSX.writeFile(wb, `${title}.xlsx`);
-                }
-                showToast('Export successful', 'success');
-            } catch(e) { showToast('Export failed', 'error'); }
+        // --- Standard Exports ---
+        async function exportDoc(id, type) {
+            const raw = document.getElementById(id).innerText;
+            const name = "Super_Gemini_Export";
+            if(type === 'docx') {
+                const { Document, Packer, Paragraph, TextRun } = window.docx;
+                const doc = new Document({ sections: [{ children: raw.split('\n').map(l => new Paragraph(l)) }] });
+                const blob = await Packer.toBlob(doc);
+                saveAs(blob, name+'.docx');
+            } else {
+                const wb = XLSX.utils.book_new();
+                const ws = XLSX.utils.aoa_to_sheet(raw.split('\n').map(l=>[l]));
+                XLSX.utils.book_append_sheet(wb, ws, "Data");
+                XLSX.writeFile(wb, name+'.xlsx');
+            }
         }
 
-        // --- Utilities ---
+        // --- Helpers ---
         function showLoader(txt, prog=false) {
             document.getElementById('loader').classList.remove('hidden');
             document.getElementById('loaderText').innerText = txt;
@@ -736,30 +870,21 @@ Create 4-6 slides. Ensure the "image_prompt" is highly descriptive and visual.
         function handleEnter(e) { if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }}
         function showToast(msg, type='info') {
             const t = document.getElementById('toast');
-            const c = type==='success'?'#10b981':type==='error'?'#ef4444':'#3b82f6';
-            t.innerHTML = `<i data-lucide="${type==='success'?'check':type==='error'?'alert-circle':'info'}" style="color:${c}"></i> ${msg}`;
+            t.innerHTML = `<i data-lucide="${type==='success'?'check':type==='error'?'alert-circle':'info'}" class="${type==='success'?'text-emerald-400':type==='error'?'text-red-400':'text-blue-400'} w-5 h-5"></i><span>${msg}</span>`;
             t.classList.add('show');
             lucide.createIcons();
             setTimeout(()=>t.classList.remove('show'),3000);
         }
-        function copyText(id) {
-            const txt = document.getElementById(id).innerText;
-            navigator.clipboard.writeText(txt);
-            showToast("Copied to clipboard", "success");
-        }
-        function saveAs(blob, name) {
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href=url; a.download=name; a.click(); URL.revokeObjectURL(url);
-        }
+        function copyText(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); showToast('Copied to clipboard','success'); }
+        function saveAs(blob, name) { const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; a.click(); }
         async function fileToBase64(f) { return new Promise((r,j)=>{const rd=new FileReader(); rd.onload=()=>r(rd.result.split(',')[1]); rd.onerror=j; rd.readAsDataURL(f);}); }
         async function readExcel(f) { return new Promise((r,j)=>{const rd=new FileReader(); rd.onload=(e)=>{const d=new Uint8Array(e.target.result); const wb=XLSX.read(d,{type:'array'}); r(XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]));}; rd.onerror=j; rd.readAsArrayBuffer(f);}); }
         function toggleMic() {
             if(!recognition) return showToast('No voice support','error');
             if(isRecording) recognition.stop(); else recognition.start();
             isRecording = !isRecording;
-            document.getElementById('micBtn').className = isRecording ? 'p-3 text-red-500 bg-red-500/10 rounded-xl animate-pulse transition-colors' : 'p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors';
+            document.getElementById('micBtn').className = isRecording ? 'p-3 text-red-500 bg-red-500/10 rounded-xl animate-pulse transition-colors' : 'p-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors';
         }
-        function updateMicIcon() { document.getElementById('micBtn').className = 'p-3 text-slate-400 hover:text-white hover:bg-slate-800 rounded-xl transition-colors'; }
     </script>
 </body>
 </html>
